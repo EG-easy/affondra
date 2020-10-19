@@ -30,6 +30,10 @@ func GetQueryCmd(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	voterQueryCmd.AddCommand(
 		flags.GetCommands(
       // this line is used by starport scaffolding # 1
+			GetCmdListVote(queryRoute, cdc),
+			GetCmdGetVote(queryRoute, cdc),
+			GetCmdListPoll(queryRoute, cdc),
+			GetCmdGetPoll(queryRoute, cdc),
 		)...,
 	)
 
