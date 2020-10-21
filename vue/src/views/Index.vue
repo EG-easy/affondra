@@ -1,22 +1,10 @@
 <template>
   <div>
-    <div class="sp-container">
-      <sp-sign-in />
-      <sp-bank-balances />
-      <sp-token-send />
-      <!-- this line is used by starport scaffolding # 4 -->
+    <app-layout>
+      <app-text type="h1">voter</app-text>
+      <wallet />
       <poll-form />
       <poll-list />
-		<sp-type-form type="vote" :fields="['pollID', 'value', ]" />
-		<sp-type-form type="poll" :fields="['title', 'options', ]" />
-    </div>
+    </app-layout>
   </div>
 </template>
-
-<script>
-import * as sp from "@tendermint/vue";
-
-export default {
-  components: { ...sp },
-};
-</script>

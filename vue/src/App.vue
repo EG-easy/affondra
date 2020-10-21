@@ -15,7 +15,7 @@
 <script>
 export default {
   created() {
-    this.$store.dispatch("cosmos/init");
+    this.$store.dispatch("init");
   },
 };
 </script>

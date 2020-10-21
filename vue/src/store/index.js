@@ -1,11 +1,16 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
+import app from "./app.js";
 import cosmos from "@tendermint/vue/src/store/cosmos.js";
+import { Secp256k1Wallet, SigningCosmosClient, makeCosmoshubPath  } from "@cosmjs/launchpad";
 
 Vue.use(Vuex);
 
+const API = "http://localhost:1317";
+const ADDRESS_PREFIX = "cosmos"
+
 export default new Vuex.Store({
-  modules: { cosmos },
   state: {
     app,
     account: {},
@@ -41,6 +46,7 @@ export default new Vuex.Store({
       commit("chainIdSet", { chain_id: node_info.network });
     },
     async accountSignIn({ commit }, { mnemonic }) {
+			console.log(mnemonic);
       return new Promise(async (resolve, reject) => {
         const wallet = await Secp256k1Wallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
         const [{ address }] = await wallet.getAccounts();
@@ -72,6 +78,7 @@ export default new Vuex.Store({
     async entitySubmit({ state }, { type, body }) {
       const { chain_id } = state;
       const creator = state.client.senderAddress;
+			console.log(creator)
       const base_req = { chain_id, from: creator };
       const req = { base_req, creator, ...body };
       const { data } = await axios.post(`${API}/${chain_id}/${type}`, req);
