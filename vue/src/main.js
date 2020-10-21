@@ -3,6 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+import _ from "lodash";
+Object.defineProperty(Vue.prototype, "$lodash", { value: _ });
+
 Vue.config.devtools = true;
 Vue.config.productionTip = false;
 
