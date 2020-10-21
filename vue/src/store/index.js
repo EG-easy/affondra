@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import axios from "axios";
 import app from "./app.js";
 import cosmos from "@tendermint/vue/src/store/cosmos.js";
-import { Secp256k1Wallet, SigningCosmosClient, makeCosmoshubPath  } from "@cosmjs/launchpad";
+import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cosmjs/launchpad";
 
 Vue.use(Vuex);
 
@@ -48,7 +48,7 @@ export default new Vuex.Store({
     async accountSignIn({ commit }, { mnemonic }) {
 			console.log(mnemonic);
       return new Promise(async (resolve, reject) => {
-        const wallet = await Secp256k1Wallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
+        const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
         const [{ address }] = await wallet.getAccounts();
         const url = `${API}/auth/accounts/${address}`;
         const acc = (await axios.get(url)).data;
@@ -83,7 +83,7 @@ export default new Vuex.Store({
       const req = { base_req, creator, ...body };
       const { data } = await axios.post(`${API}/${chain_id}/${type}`, req);
       const { msg, fee, memo } = data.value;
-      return await state.client.signAndPost(msg, fee, memo);
+      return await state.client.signAndBroadcast(msg, fee, memo);
     },
   },
 });
