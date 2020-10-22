@@ -10,6 +10,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	"github.com/EG-easy/voter/x/voter"
+	voterkeeper "github.com/EG-easy/voter/x/voter/keeper"
+	votertypes "github.com/EG-easy/voter/x/voter/types"
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
@@ -22,18 +25,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/params"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/supply"
-	"github.com/EG-easy/voter/x/voter"
-	voterkeeper "github.com/EG-easy/voter/x/voter/keeper"
-	votertypes "github.com/EG-easy/voter/x/voter/types"
-  // this line is used by starport scaffolding # 1
+
+	// this line is used by starport scaffolding # 1
+	"github.com/cosmos/modules/incubator/nft"
 )
 
 const appName = "voter"
 
 var (
-	DefaultCLIHome = os.ExpandEnv("$HOME/.votercli")
+	DefaultCLIHome  = os.ExpandEnv("$HOME/.votercli")
 	DefaultNodeHome = os.ExpandEnv("$HOME/.voterd")
-	ModuleBasics = module.NewBasicManager(
+	ModuleBasics    = module.NewBasicManager(
 		genutil.AppModuleBasic{},
 		auth.AppModuleBasic{},
 		bank.AppModuleBasic{},
@@ -41,7 +43,8 @@ var (
 		params.AppModuleBasic{},
 		supply.AppModuleBasic{},
 		voter.AppModuleBasic{},
-    // this line is used by starport scaffolding # 2
+		// this line is used by starport scaffolding # 2
+		nft.AppModuleBasic{},
 	)
 
 	maccPerms = map[string][]string{
@@ -72,14 +75,15 @@ type NewApp struct {
 
 	subspaces map[string]params.Subspace
 
-	accountKeeper  auth.AccountKeeper
-	bankKeeper     bank.Keeper
-	stakingKeeper  staking.Keeper
-	supplyKeeper   supply.Keeper
-	paramsKeeper   params.Keeper
-	voterKeeper voterkeeper.Keeper
-  // this line is used by starport scaffolding # 3
-	mm *module.Manager
+	accountKeeper auth.AccountKeeper
+	bankKeeper    bank.Keeper
+	stakingKeeper staking.Keeper
+	supplyKeeper  supply.Keeper
+	paramsKeeper  params.Keeper
+	voterKeeper   voterkeeper.Keeper
+	// this line is used by starport scaffolding # 3
+	NFTKeeper nft.Keeper
+	mm        *module.Manager
 
 	sm *module.SimulationManager
 }
@@ -97,14 +101,15 @@ func NewInitApp(
 	bApp.SetAppVersion(version.Version)
 
 	keys := sdk.NewKVStoreKeys(
-    bam.MainStoreKey,
-    auth.StoreKey,
-    staking.StoreKey,
+		bam.MainStoreKey,
+		auth.StoreKey,
+		staking.StoreKey,
 		supply.StoreKey,
-    params.StoreKey,
-    votertypes.StoreKey,
-    // this line is used by starport scaffolding # 5
-  )
+		params.StoreKey,
+		votertypes.StoreKey,
+		// this line is used by starport scaffolding # 5
+		nft.StoreKey,
+	)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
 
@@ -160,7 +165,9 @@ func NewInitApp(
 		keys[votertypes.StoreKey],
 	)
 
-  // this line is used by starport scaffolding # 4
+	app.NFTKeeper = nft.NewKeeper(app.cdc, keys[nft.StoreKey])
+
+	// this line is used by starport scaffolding # 4
 
 	app.mm = module.NewManager(
 		genutil.NewAppModule(app.accountKeeper, app.stakingKeeper, app.BaseApp.DeliverTx),
@@ -169,7 +176,8 @@ func NewInitApp(
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
 		voter.NewAppModule(app.voterKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
-    // this line is used by starport scaffolding # 6
+		// this line is used by starport scaffolding # 6
+		nft.NewAppModule(app.NFTKeeper, app.accountKeeper),
 	)
 
 	app.mm.SetOrderEndBlockers(staking.ModuleName)
@@ -181,7 +189,8 @@ func NewInitApp(
 		votertypes.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,
-    // this line is used by starport scaffolding # 7
+		// this line is used by starport scaffolding # 7
+		nft.ModuleName,
 	)
 
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter())
