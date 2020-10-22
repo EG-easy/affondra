@@ -22,3 +22,7 @@ const (
 	VotePrefix = "vote-"
 )
 		
+const (
+	ItemPrefix = "item-"
+)
+		
