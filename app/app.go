@@ -161,6 +161,7 @@ func NewInitApp(
 
 	app.voterKeeper = voterkeeper.NewKeeper(
 		app.bankKeeper,
+		app.NFTKeeper,
 		app.cdc,
 		keys[votertypes.StoreKey],
 	)

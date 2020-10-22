@@ -5,10 +5,11 @@ import (
 
 	"github.com/tendermint/tendermint/libs/log"
 
+	"github.com/EG-easy/voter/x/voter/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	"github.com/EG-easy/voter/x/voter/types"
+	"github.com/cosmos/modules/incubator/nft"
 )
 
 // Keeper of the voter store
@@ -17,15 +18,18 @@ type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        *codec.Codec
 	// paramspace types.ParamSubspace
+	// add NFTKeeper
+	NFTKeeper nft.Keeper
 }
 
 // NewKeeper creates a voter keeper
-func NewKeeper(coinKeeper bank.Keeper, cdc *codec.Codec, key sdk.StoreKey) Keeper {
+func NewKeeper(coinKeeper bank.Keeper, nftKeeper nft.Keeper, cdc *codec.Codec, key sdk.StoreKey) Keeper {
 	keeper := Keeper{
 		CoinKeeper: coinKeeper,
 		storeKey:   key,
 		cdc:        cdc,
 		// paramspace: paramspace.WithKeyTable(types.ParamKeyTable()),
+		NFTKeeper: nftKeeper,
 	}
 	return keeper
 }
