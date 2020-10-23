@@ -14,7 +14,7 @@ produces:
 paths:
   /nft/denoms:
     get:
-      summary: /nft/denoms
+      summary: Get list of Denoms.
       tags:
       - Misc
       operationId: /nft/denoms
@@ -26,12 +26,13 @@ paths:
         200:
           description: ''
           headers: {}
-  /nft/owner/cosmos1rfw6nc58070zz6jmzl07d4pst5amrds8u0lth7:
+  /nft/owner/{address}:
     get:
-      summary: /nft/owner/cosmos1rfw6nc58070zz6jmzl07d4pst5amrds8u0lth7
+      summary: Get list of NFTs a specified owner have.
+      description: Get list of NFTs a specified owner have.
       tags:
       - Misc
-      operationId: /nft/owner/cosmos1rfw6nc58070zz6jmzl07d4pst5amrds8u0lth7
+      operationId: getNftsByOwner
       deprecated: false
       produces:
       - application/json
@@ -40,12 +41,24 @@ paths:
         200:
           description: ''
           headers: {}
-  /nft/owner/cosmos1rfw6nc58070zz6jmzl07d4pst5amrds8u0lth7/collection/crypto-kitties:
+  /nft/owners/collection/{denom}:
     get:
-      summary: /nft/owner/cosmos1rfw6nc58070zz6jmzl07d4pst5amrds8u0lth7/collection/crypto-kitties
+      summary: Get list of NFTs a specified owner have in a specified denom.
+      description: Get list of NFTs a specified owner have in a specified denom.
       tags:
       - Misc
-      operationId: /nft/owner/cosmos1rfw6nc58070zz6jmzl07d4pst5amrds8u0lth7/collection/crypto-kitties
+      operationId: getNftsByOwnerAndDenom
+      responses:
+        200:
+          description: ''
+          headers: {}
+  /nft/collection/{denom}:
+    get:
+      summary: Get list of NFTs in a specified denom.
+      description: Get list of NFTs in a specified denom.
+      tags:
+      - Misc
+      operationId: getNftsByDenom
       deprecated: false
       produces:
       - application/json
@@ -54,26 +67,12 @@ paths:
         200:
           description: ''
           headers: {}
-  /nft/collection/crypto-kitties:
+  /nft/supply/{denom}:
     get:
-      summary: /nft/collection/crypto-kitties
+      summary: Return total amount of tokens in a specified denom.
       tags:
       - Misc
-      operationId: /nft/collection/crypto-kitties
-      deprecated: false
-      produces:
-      - application/json
-      parameters: []
-      responses:
-        200:
-          description: ''
-          headers: {}
-  /nft/supply/crypto-kitties:
-    get:
-      summary: /nft/supply/crypto-kitties
-      tags:
-      - Misc
-      operationId: /nft/supply/crypto-kitties
+      operationId: getSupplyByDenom
       deprecated: false
       produces:
       - application/json
@@ -163,12 +162,11 @@ paths:
         200:
           description: ''
           headers: {}
-  /nfts/collection/crypto-kitties/nft/aaa/burn:
+  /nfts/collection/crypto-kitties/nft/{nft-id}/burn:
     put:
-      summary: /nfts/collection/crypto-kitties/nft/aaa/burn
       tags:
       - Misc
-      operationId: /nfts/collection/crypto-kitties/nft/aaa/burn
+      operationId: Burn (delete) a specify NFT.
       deprecated: false
       produces:
       - application/json
