@@ -3,7 +3,7 @@ info:
   version: '1.0'
   title: NFT
   contact: {}
-host: localhost:1317
+host: 192.168.1.160:1317
 basePath: /
 schemes:
 - http
