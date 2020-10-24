@@ -10,9 +10,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/EG-easy/voter/x/voter"
-	voterkeeper "github.com/EG-easy/voter/x/voter/keeper"
-	votertypes "github.com/EG-easy/voter/x/voter/types"
+	"github.com/EG-easy/affondra/x/affondra"
+	affondrakeeper "github.com/EG-easy/affondra/x/affondra/keeper"
+	affondratypes "github.com/EG-easy/affondra/x/affondra/types"
 	bam "github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
@@ -30,11 +30,11 @@ import (
 	"github.com/cosmos/modules/incubator/nft"
 )
 
-const appName = "voter"
+const appName = "affondra"
 
 var (
-	DefaultCLIHome  = os.ExpandEnv("$HOME/.votercli")
-	DefaultNodeHome = os.ExpandEnv("$HOME/.voterd")
+	DefaultCLIHome  = os.ExpandEnv("$HOME/.affondracli")
+	DefaultNodeHome = os.ExpandEnv("$HOME/.affondrad")
 	ModuleBasics    = module.NewBasicManager(
 		genutil.AppModuleBasic{},
 		auth.AppModuleBasic{},
@@ -42,7 +42,7 @@ var (
 		staking.AppModuleBasic{},
 		params.AppModuleBasic{},
 		supply.AppModuleBasic{},
-		voter.AppModuleBasic{},
+		affondra.AppModuleBasic{},
 		// this line is used by starport scaffolding # 2
 		nft.AppModuleBasic{},
 	)
@@ -75,12 +75,12 @@ type NewApp struct {
 
 	subspaces map[string]params.Subspace
 
-	accountKeeper auth.AccountKeeper
-	bankKeeper    bank.Keeper
-	stakingKeeper staking.Keeper
-	supplyKeeper  supply.Keeper
-	paramsKeeper  params.Keeper
-	voterKeeper   voterkeeper.Keeper
+	accountKeeper  auth.AccountKeeper
+	bankKeeper     bank.Keeper
+	stakingKeeper  staking.Keeper
+	supplyKeeper   supply.Keeper
+	paramsKeeper   params.Keeper
+	affondraKeeper affondrakeeper.Keeper
 	// this line is used by starport scaffolding # 3
 	NFTKeeper nft.Keeper
 	mm        *module.Manager
@@ -106,7 +106,7 @@ func NewInitApp(
 		staking.StoreKey,
 		supply.StoreKey,
 		params.StoreKey,
-		votertypes.StoreKey,
+		affondratypes.StoreKey,
 		// this line is used by starport scaffolding # 5
 		nft.StoreKey,
 	)
@@ -159,14 +159,14 @@ func NewInitApp(
 		staking.NewMultiStakingHooks(),
 	)
 
-	app.voterKeeper = voterkeeper.NewKeeper(
+	app.NFTKeeper = nft.NewKeeper(app.cdc, keys[nft.StoreKey])
+
+	app.affondraKeeper = affondrakeeper.NewKeeper(
 		app.bankKeeper,
 		app.NFTKeeper,
 		app.cdc,
-		keys[votertypes.StoreKey],
+		keys[affondratypes.StoreKey],
 	)
-
-	app.NFTKeeper = nft.NewKeeper(app.cdc, keys[nft.StoreKey])
 
 	// this line is used by starport scaffolding # 4
 
@@ -175,7 +175,7 @@ func NewInitApp(
 		auth.NewAppModule(app.accountKeeper),
 		bank.NewAppModule(app.bankKeeper, app.accountKeeper),
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
-		voter.NewAppModule(app.voterKeeper, app.bankKeeper),
+		affondra.NewAppModule(app.affondraKeeper, app.bankKeeper, app.NFTKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		// this line is used by starport scaffolding # 6
 		nft.NewAppModule(app.NFTKeeper, app.accountKeeper),
@@ -187,7 +187,7 @@ func NewInitApp(
 		staking.ModuleName,
 		auth.ModuleName,
 		bank.ModuleName,
-		votertypes.ModuleName,
+		affondratypes.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,
 		// this line is used by starport scaffolding # 7
