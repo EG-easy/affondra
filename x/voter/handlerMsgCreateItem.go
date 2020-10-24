@@ -20,17 +20,15 @@ func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateIt
 	}
 
 	nft, err := k.NFTKeeper.GetNFT(ctx, msg.Denom, msg.NftId)
-	// check if nft is exist
-	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Wrong Denom or Nftid")
-	}
 
+	//check if nft is exist
+	if err != nil {
+		return nil, err
+	}
 	// check if owner is correct
 	if !msg.Creator.Equals(nft.GetOwner()) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Incorrect Owner")
 	}
-
 	k.CreateItem(ctx, item)
-
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }

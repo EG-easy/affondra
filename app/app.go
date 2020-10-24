@@ -159,14 +159,14 @@ func NewInitApp(
 		staking.NewMultiStakingHooks(),
 	)
 
+	app.NFTKeeper = nft.NewKeeper(app.cdc, keys[nft.StoreKey])
+
 	app.voterKeeper = voterkeeper.NewKeeper(
 		app.bankKeeper,
 		app.NFTKeeper,
 		app.cdc,
 		keys[votertypes.StoreKey],
 	)
-
-	app.NFTKeeper = nft.NewKeeper(app.cdc, keys[nft.StoreKey])
 
 	// this line is used by starport scaffolding # 4
 
@@ -175,7 +175,7 @@ func NewInitApp(
 		auth.NewAppModule(app.accountKeeper),
 		bank.NewAppModule(app.bankKeeper, app.accountKeeper),
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
-		voter.NewAppModule(app.voterKeeper, app.bankKeeper),
+		voter.NewAppModule(app.voterKeeper, app.bankKeeper, app.NFTKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		// this line is used by starport scaffolding # 6
 		nft.NewAppModule(app.NFTKeeper, app.accountKeeper),

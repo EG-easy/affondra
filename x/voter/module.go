@@ -8,15 +8,16 @@ import (
 
 	abci "github.com/tendermint/tendermint/abci/types"
 
+	"github.com/EG-easy/voter/x/voter/client/cli"
+	"github.com/EG-easy/voter/x/voter/client/rest"
+	"github.com/EG-easy/voter/x/voter/keeper"
+	"github.com/EG-easy/voter/x/voter/types"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	"github.com/EG-easy/voter/x/voter/client/cli"
-	"github.com/EG-easy/voter/x/voter/client/rest"
-	"github.com/EG-easy/voter/x/voter/keeper"
-	"github.com/EG-easy/voter/x/voter/types"
+	"github.com/cosmos/modules/incubator/nft"
 )
 
 // Type check to ensure the interface is properly implemented
@@ -78,16 +79,17 @@ type AppModule struct {
 	keeper     keeper.Keeper
 	coinKeeper bank.Keeper
 	// TODO: Add keepers that your application depends on
-
+	NFTKeeper nft.Keeper
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(k keeper.Keeper, bankKeeper bank.Keeper) AppModule {
+func NewAppModule(k keeper.Keeper, bankKeeper bank.Keeper, nftKeeper nft.Keeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
 		coinKeeper:     bankKeeper,
 		// TODO: Add keepers that your application depends on
+		NFTKeeper: nftKeeper,
 	}
 }
 
