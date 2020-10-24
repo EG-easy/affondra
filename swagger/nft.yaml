@@ -1,62 +1,86 @@
-swagger: '2.0'
+openapi: '3.0.0'
 info:
   version: '1.0'
   title: NFT
-  contact: {}
-host: 192.168.1.160:1317
-basePath: /
-schemes:
-- http
-consumes:
-- application/json
-produces:
-- application/json
+servers:
+  - url: http://192.168.1.160:1317
+tags:
+  - name: NFT
 paths:
   /nft/denoms:
     get:
       summary: Get list of Denoms.
       tags:
-      - Misc
+      - NFT
       operationId: /nft/denoms
-      deprecated: false
-      produces:
-      - application/json
-      parameters: []
       responses:
         200:
-          description: ''
-          headers: {}
+          description: 成功時のレスポンス
   /nft/owner/{address}:
     get:
       summary: Get list of NFTs a specified owner have.
       description: Get list of NFTs a specified owner have.
       tags:
-      - Misc
+      - NFT
       operationId: getNftsByOwner
-      deprecated: false
-      produces:
-      - application/json
       parameters:
       - name: "address"
         description: 'An owner address'
         in: "path"
         required: true
-        type: "string"
+        schema:
+          type: string
+          example: cosmos1gzfwesw9h0yp6pjr32ku4f3f28usezzarrqegh
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  height:
+                    type: "integer"
+                  result:
+                    type: "object"
+                    properties:
+                      type:
+                        type: "string"
+                        example: "cosmos-sdk/Owner"
+                      value:
+                        type: "object"
+                        properties:
+                          address:
+                            type: "string"
+                            example: "COSMOS_ADDRESS"
+                          idCollections:
+                            type: array
+                            nullable: true
+                            items:
+                              type: "object"
+                              properties:
+                                denom:
+                                  type: "string"
+                                  example: "DENOM_NAME"
+                                ids:
+                                  type: "array"
+                                  items:
+                                    type: "string"
+                                    example: ["aaa", "bbb"]
   /nft/owners/collection/{denom}:
     get:
       summary: Get list of NFTs a specified owner have in a specified denom.
       description: Get list of NFTs a specified owner have in a specified denom.
-      tags:
+      tags: 
       - Misc
       operationId: getNftsByOwnerAndDenom
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /nft/collection/{denom}:
     get:
       summary: Get list of NFTs in a specified denom.
@@ -65,13 +89,14 @@ paths:
       - Misc
       operationId: getNftsByDenom
       deprecated: false
-      produces:
-      - application/json
       parameters: []
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /nft/supply/{denom}:
     get:
       summary: Return total amount of tokens in a specified denom.
@@ -79,13 +104,14 @@ paths:
       - Misc
       operationId: getSupplyByDenom
       deprecated: false
-      produces:
-      - application/json
       parameters: []
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /nfts/mint:
     post:
       summary: /nfts/mint
@@ -93,26 +119,25 @@ paths:
       - Misc
       operationId: /nfts/mint
       deprecated: false
-      produces:
-      - application/json
-      consumes:
-      - application/json
       parameters:
-      - name: Content-Type
-        in: header
+      - in: header
+        name: Content-Type
         required: true
-        type: string
-        description: ''
-      - name: Body
-        in: body
-        required: true
-        description: ''
         schema:
-          $ref: '#/definitions/~1nfts~1mintrequest'
+          type: string
+          example: "aaa"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/nfts/mintrequest'
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /nfts/transfer:
     post:
       summary: /nfts/transfer
@@ -120,26 +145,25 @@ paths:
       - Misc
       operationId: /nfts/transfer
       deprecated: false
-      produces:
-      - application/json
-      consumes:
-      - application/json
       parameters:
-      - name: Content-Type
-        in: header
+      - in: header
+        name: Content-Type
         required: true
-        type: string
-        description: ''
-      - name: Body
-        in: body
-        required: true
-        description: ''
         schema:
-          $ref: '#/definitions/~1nfts~1transferrequest'
+          type: string
+          example: "aaa"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/~1nfts~1transferrequest'
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /nfts/collection/crypto-kitties/nft/aaa/metadata:
     put:
       summary: /nfts/collection/crypto-kitties/nft/aaa/metadata
@@ -147,57 +171,227 @@ paths:
       - Misc
       operationId: /nfts/collection/crypto-kitties/nft/aaa/metadata
       deprecated: false
-      produces:
-      - application/json
-      consumes:
-      - application/json
       parameters:
-      - name: Content-Type
-        in: header
+      - in: header
+        name: Content-Type
         required: true
-        type: string
-        description: ''
-      - name: Body
-        in: body
-        required: true
-        description: ''
         schema:
-          $ref: '#/definitions/~1nfts~1collection~1crypto-kitties~1nft~1aaa~1metadata-request'
+          type: string
+          example: "aaa"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/nfts/collection/crypto-kitties/nft/aaa/metadata-request'
       responses:
         200:
           description: ''
-          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
   /nfts/collection/crypto-kitties/nft/{nft-id}/burn:
     put:
       tags:
       - Misc
       operationId: Burn (delete) a specify NFT.
-      deprecated: false
-      produces:
-      - application/json
-      consumes:
-      - application/json
       parameters:
-      - name: Content-Type
-        in: header
+      - in: header
+        name: Content-Type
         required: true
-        type: string
-        description: ''
-      - name: Body
-        in: body
-        required: true
-        description: ''
         schema:
-          $ref: '#/definitions/~1nfts~1collection~1crypto-kitties~1nft~1aaa~1burn-request'
+          type: string
+          example: "aaa"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/nfts/collection/crypto-kitties/nft/aaa/burn-request'
       responses:
         200:
           description: ''
           headers: {}
-definitions:
-  /nfts/mintrequest:
-    title: /nfts/mintrequest
-    example:
-      base_req:
+components:
+  requestBodies:
+    /nfts/mintrequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/components/schemas/BaseReq'
+              recipient:
+                type: string
+              denom:
+                type: string
+              id:
+                type: string
+              tokenURI:
+                type: string
+            required:
+            - base_req
+            - recipient
+            - denom
+            - id
+            - tokenURI
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+              account_number: 0
+              sequence: 1
+              gas: 200000
+              gas_adjustment: 1.2
+              fees:
+              - denom: token
+                amount: 50
+              simulate: false
+            recipient: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+            denom: MyToken
+            id: aaa
+            tokenURI: http://localhost:8080
+    /nfts/transferrequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/definitions/BaseReq'
+              denom:
+                type: string
+              id:
+                type: string
+              recipient:
+                type: string
+            required:
+            - base_req
+            - denom
+            - id
+            - recipient
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+              account_number: 0
+              sequence: 1
+              gas: 200000
+              gas_adjustment: 1.2
+              fees:
+              - denom: token
+                amount: 50
+              simulate: false
+            denom: MyToken
+            id: aaa
+            recipient: cosmos1atsc0j4w23derwmv98n72y28vdxsalp4zpcgz2
+    /nfts/collection/crypto-kitties/nft/aaa/metadata-request:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/definitions/BaseReq'
+              denom:
+                type: string
+              id:
+                type: string
+              tokenURI:
+                type: string
+            required:
+            - base_req
+            - denom
+            - id
+            - tokenURI
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+              account_number: 0
+              sequence: 1
+              gas: 200000
+              gas_adjustment: 1.2
+              fees:
+              - denom: token
+                amount: 50
+              simulate: false
+            denom: crypto-kitties
+            id: aaa
+            tokenURI: http://changeurl:8080
+    /nfts/collection/crypto-kitties/nft/aaa/burn-request:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/definitions/BaseReq'
+              denom:
+                type: string
+              id:
+                type: string
+            required:
+            - base_req
+            - denom
+            - id
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+              account_number: 0
+              sequence: 1
+              gas: 200000
+              gas_adjustment: 1.2
+              fees:
+              - denom: token
+                amount: 50
+              simulate: false
+            denom: crypto-kitties
+            id: aaa
+  schemas:
+    BaseReq:
+      type: object
+      properties:
+        from:
+          type: string
+        memo:
+          type: string
+        chain_id:
+          type: string
+        account_number:
+          type: string
+        sequence:
+          type: string
+        gas:
+          type: string
+        gas_adjustment:
+          type: string
+        fees:
+          type: array
+          items:
+            $ref: '#/definitions/Fee'
+        simulate:
+          type: boolean
+      required:
+      - from
+      - memo
+      - chain_id
+      - account_number
+      - sequence
+      - gas
+      - gas_adjustment
+      - fees
+      - simulate
+      example:
         from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
         memo: "Sent from Postman \U0001F680"
         chain_id: voter
@@ -209,183 +403,16 @@ definitions:
         - denom: token
           amount: 50
         simulate: false
-      recipient: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-      denom: MyToken
-      id: aaa
-      tokenURI: http://localhost:8080
-    type: object
-    properties:
-      base_req:
-        $ref: '#/definitions/BaseReq'
-      recipient:
-        type: string
-      denom:
-        type: string
-      id:
-        type: string
-      tokenURI:
-        type: string
-    required:
-    - base_req
-    - recipient
-    - denom
-    - id
-    - tokenURI
-  BaseReq:
-    title: BaseReq
-    example:
-      from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-      memo: "Sent from Postman \U0001F680"
-      chain_id: voter
-      account_number: 0
-      sequence: 1
-      gas: 200000
-      gas_adjustment: 1.2
-      fees:
-      - denom: token
+    Fee:
+      type: object
+      properties:
+        denom:
+          type: string
+        amount:
+          type: string
+      required:
+      - denom
+      - amount
+      example:
+        denom: token
         amount: 50
-      simulate: false
-    type: object
-    properties:
-      from:
-        type: string
-      memo:
-        type: string
-      chain_id:
-        type: string
-      account_number:
-        type: string
-      sequence:
-        type: string
-      gas:
-        type: string
-      gas_adjustment:
-        type: string
-      fees:
-        type: array
-        items:
-          $ref: '#/definitions/Fee'
-      simulate:
-        type: boolean
-    required:
-    - from
-    - memo
-    - chain_id
-    - account_number
-    - sequence
-    - gas
-    - gas_adjustment
-    - fees
-    - simulate
-  Fee:
-    title: Fee
-    example:
-      denom: token
-      amount: 50
-    type: object
-    properties:
-      denom:
-        type: string
-      amount:
-        type: string
-    required:
-    - denom
-    - amount
-  /nfts/transferrequest:
-    title: /nfts/transferrequest
-    example:
-      base_req:
-        from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-        memo: "Sent from Postman \U0001F680"
-        chain_id: voter
-        account_number: 0
-        sequence: 1
-        gas: 200000
-        gas_adjustment: 1.2
-        fees:
-        - denom: token
-          amount: 50
-        simulate: false
-      denom: MyToken
-      id: aaa
-      recipient: cosmos1atsc0j4w23derwmv98n72y28vdxsalp4zpcgz2
-    type: object
-    properties:
-      base_req:
-        $ref: '#/definitions/BaseReq'
-      denom:
-        type: string
-      id:
-        type: string
-      recipient:
-        type: string
-    required:
-    - base_req
-    - denom
-    - id
-    - recipient
-  /nfts/collection/crypto-kitties/nft/aaa/metadata-request:
-    title: /nfts/collection/crypto-kitties/nft/aaa/metadata-request
-    example:
-      base_req:
-        from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-        memo: "Sent from Postman \U0001F680"
-        chain_id: voter
-        account_number: 0
-        sequence: 1
-        gas: 200000
-        gas_adjustment: 1.2
-        fees:
-        - denom: token
-          amount: 50
-        simulate: false
-      denom: crypto-kitties
-      id: aaa
-      tokenURI: http://changeurl:8080
-    type: object
-    properties:
-      base_req:
-        $ref: '#/definitions/BaseReq'
-      denom:
-        type: string
-      id:
-        type: string
-      tokenURI:
-        type: string
-    required:
-    - base_req
-    - denom
-    - id
-    - tokenURI
-  /nfts/collection/crypto-kitties/nft/aaa/burn-request:
-    title: /nfts/collection/crypto-kitties/nft/aaa/burn-request
-    example:
-      base_req:
-        from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-        memo: "Sent from Postman \U0001F680"
-        chain_id: voter
-        account_number: 0
-        sequence: 1
-        gas: 200000
-        gas_adjustment: 1.2
-        fees:
-        - denom: token
-          amount: 50
-        simulate: false
-      denom: crypto-kitties
-      id: aaa
-    type: object
-    properties:
-      base_req:
-        $ref: '#/definitions/BaseReq'
-      denom:
-        type: string
-      id:
-        type: string
-    required:
-    - base_req
-    - denom
-    - id
-tags:
-- name: Misc
-  description: ''
