@@ -1,26 +1,32 @@
 {
-  "name": "frontend",
+  "name": "vue",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm install && vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "deploy": "firebase deploy --only hosting"
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@cosmjs/launchpad": "^0.23.0",
-    "@tendermint/vue": "0.1.1",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.4.0",
-    "@vue/cli-plugin-router": "^4.4.0",
-    "@vue/cli-plugin-vuex": "^4.4.6",
-    "@vue/cli-service": "^4.4.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/test-utils": "^1.0.3",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
   }
 }
