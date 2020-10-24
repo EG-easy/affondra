@@ -36,7 +36,12 @@ paths:
       deprecated: false
       produces:
       - application/json
-      parameters: []
+      parameters:
+      - name: "address"
+        description: 'An owner address'
+        in: "path"
+        required: true
+        type: "string"
       responses:
         200:
           description: ''
