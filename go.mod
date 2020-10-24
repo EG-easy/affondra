@@ -1,4 +1,4 @@
-module github.com/EG-easy/voter
+module github.com/EG-easy/affondra
 
 go 1.15
 
