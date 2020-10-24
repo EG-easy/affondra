@@ -9,6 +9,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@cosmjs/launchpad": "^0.23.0",
+    "@tendermint/vue": "0.1.1",
     "@mdi/font": "^3.6.95",
     "core-js": "^3.6.5",
     "roboto-fontface": "*",
