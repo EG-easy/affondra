@@ -21,7 +21,7 @@ paths:
       summary: Get list of NFTs a specified owner have.
       description: Get list of NFTs a specified owner have.
       tags:
-      - NFT
+        - NFT
       operationId: getNftsByOwner
       parameters:
       - name: "address"
@@ -71,9 +71,17 @@ paths:
     get:
       summary: Get list of NFTs a specified owner have in a specified denom.
       description: Get list of NFTs a specified owner have in a specified denom.
-      tags: 
-      - Misc
+      tags:
+        - NFT
       operationId: getNftsByOwnerAndDenom
+      parameters:
+      - in: "path"
+        name: "denom"
+        description: 'A NFT denom'
+        required: true
+        schema:
+          type: string
+          example: crypto-kitties
       responses:
         200:
           description: ''
@@ -86,10 +94,16 @@ paths:
       summary: Get list of NFTs in a specified denom.
       description: Get list of NFTs in a specified denom.
       tags:
-      - Misc
+        - NFT
       operationId: getNftsByDenom
-      deprecated: false
-      parameters: []
+      parameters:
+      - in: "path"
+        name: "denom"
+        description: 'A NFT denom'
+        required: true
+        schema:
+          type: string
+          example: crypto-kitties
       responses:
         200:
           description: ''
@@ -101,10 +115,15 @@ paths:
     get:
       summary: Return total amount of tokens in a specified denom.
       tags:
-      - Misc
+        - NFT
       operationId: getSupplyByDenom
       deprecated: false
-      parameters: []
+      parameters:
+        - in: path
+          name: denom
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -114,23 +133,14 @@ paths:
                 type: object
   /nfts/mint:
     post:
-      summary: /nfts/mint
+      summary: ---
       tags:
-      - Misc
+        - NFT
       operationId: /nfts/mint
       deprecated: false
-      parameters:
-      - in: header
-        name: Content-Type
-        required: true
-        schema:
-          type: string
-          example: "aaa"
+      parameters: []
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/nfts/mintrequest'
+        $ref: '#/components/requestBodies/nftsMintrequest'
       responses:
         200:
           description: ''
@@ -140,23 +150,48 @@ paths:
                 type: object
   /nfts/transfer:
     post:
-      summary: /nfts/transfer
+      summary: ---
       tags:
-      - Misc
+        - NFT
       operationId: /nfts/transfer
       deprecated: false
-      parameters:
-      - in: header
-        name: Content-Type
-        required: true
-        schema:
-          type: string
-          example: "aaa"
+      parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/~1nfts~1transferrequest'
+              type: object
+              properties:
+                base_req:
+                  $ref: '#/components/schemas/BaseReq'
+                denom:
+                  type: string
+                id:
+                  type: string
+                recipient:
+                  type: string
+              required:
+              - base_req
+              - denom
+              - id
+              - recipient
+            example:
+              base_req:
+                from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+                memo: "Sent from Postman \U0001F680"
+                chain_id: voter
+                account_number: 0
+                sequence: 1
+                gas: 200000
+                gas_adjustment: 1.2
+                fees:
+                - denom: token
+                  amount: 50
+                simulate: false
+              denom: MyToken
+              id: aaa
+              recipient: cosmos1atsc0j4w23derwmv98n72y28vdxsalp4zpcgz2
       responses:
         200:
           description: ''
@@ -164,25 +199,52 @@ paths:
             application/json:
               schema:
                 type: object
-  /nfts/collection/crypto-kitties/nft/aaa/metadata:
+  /nfts/collection/{denom}/nft/{nftId}/metadata:
     put:
-      summary: /nfts/collection/crypto-kitties/nft/aaa/metadata
+      summary: ---
       tags:
-      - Misc
+        - NFT
       operationId: /nfts/collection/crypto-kitties/nft/aaa/metadata
       deprecated: false
       parameters:
-      - in: header
-        name: Content-Type
-        required: true
-        schema:
-          type: string
-          example: "aaa"
+      - $ref: '#/components/parameters/denom'
+      - $ref: '#/components/parameters/nftId'
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/nfts/collection/crypto-kitties/nft/aaa/metadata-request'
+              type: object
+              properties:
+                base_req:
+                  $ref: '#/components/schemas/BaseReq'
+                denom:
+                  type: string
+                id:
+                  type: string
+                tokenURI:
+                  type: string
+              required:
+              - base_req
+              - denom
+              - id
+              - tokenURI
+            example:
+              base_req:
+                from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+                memo: "Sent from Postman \U0001F680"
+                chain_id: voter
+                account_number: 0
+                sequence: 1
+                gas: 200000
+                gas_adjustment: 1.2
+                fees:
+                - denom: token
+                  amount: 50
+                simulate: false
+              denom: crypto-kitties
+              id: aaa
+              tokenURI: http://changeurl:8080
       responses:
         200:
           description: ''
@@ -190,30 +252,70 @@ paths:
             application/json:
               schema:
                 type: object
-  /nfts/collection/crypto-kitties/nft/{nft-id}/burn:
+  /nfts/collection/{denom}/nft/{nftId}/burn:
     put:
+      summary: ---
       tags:
-      - Misc
+        - NFT
       operationId: Burn (delete) a specify NFT.
       parameters:
-      - in: header
-        name: Content-Type
-        required: true
-        schema:
-          type: string
-          example: "aaa"
+        - $ref: '#/components/parameters/denom'
+        - $ref: '#/components/parameters/nftId'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/nfts/collection/crypto-kitties/nft/aaa/burn-request'
+              type: object
+              properties:
+                base_req:
+                  $ref: '#/components/schemas/BaseReq'
+                denom:
+                  type: string
+                id:
+                  type: string
+              required:
+              - base_req
+              - denom
+              - id
+            example:
+              base_req:
+                from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+                memo: "Sent from Postman \U0001F680"
+                chain_id: voter
+                account_number: 0
+                sequence: 1
+                gas: 200000
+                gas_adjustment: 1.2
+                fees:
+                - denom: token
+                  amount: 50
+                simulate: false
+              denom: crypto-kitties
+              id: aaa
       responses:
         200:
           description: ''
           headers: {}
 components:
+  parameters:
+    denom:
+      name: denom
+      in: path
+      description: A denom of NFT.
+      required: true
+      schema:
+        type: string
+        example: crypto-kitties
+    nftId:
+      name: nftId
+      in: path
+      description: A id of NFT.
+      required: true
+      schema:
+        type: string
+        example: aaa
   requestBodies:
-    /nfts/mintrequest:
+    nftsMintrequest:
       required: true
       content:
         application/json:
@@ -253,110 +355,6 @@ components:
             denom: MyToken
             id: aaa
             tokenURI: http://localhost:8080
-    /nfts/transferrequest:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              base_req:
-                $ref: '#/definitions/BaseReq'
-              denom:
-                type: string
-              id:
-                type: string
-              recipient:
-                type: string
-            required:
-            - base_req
-            - denom
-            - id
-            - recipient
-          example:
-            base_req:
-              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-              memo: "Sent from Postman \U0001F680"
-              chain_id: voter
-              account_number: 0
-              sequence: 1
-              gas: 200000
-              gas_adjustment: 1.2
-              fees:
-              - denom: token
-                amount: 50
-              simulate: false
-            denom: MyToken
-            id: aaa
-            recipient: cosmos1atsc0j4w23derwmv98n72y28vdxsalp4zpcgz2
-    /nfts/collection/crypto-kitties/nft/aaa/metadata-request:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              base_req:
-                $ref: '#/definitions/BaseReq'
-              denom:
-                type: string
-              id:
-                type: string
-              tokenURI:
-                type: string
-            required:
-            - base_req
-            - denom
-            - id
-            - tokenURI
-          example:
-            base_req:
-              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-              memo: "Sent from Postman \U0001F680"
-              chain_id: voter
-              account_number: 0
-              sequence: 1
-              gas: 200000
-              gas_adjustment: 1.2
-              fees:
-              - denom: token
-                amount: 50
-              simulate: false
-            denom: crypto-kitties
-            id: aaa
-            tokenURI: http://changeurl:8080
-    /nfts/collection/crypto-kitties/nft/aaa/burn-request:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              base_req:
-                $ref: '#/definitions/BaseReq'
-              denom:
-                type: string
-              id:
-                type: string
-            required:
-            - base_req
-            - denom
-            - id
-          example:
-            base_req:
-              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-              memo: "Sent from Postman \U0001F680"
-              chain_id: voter
-              account_number: 0
-              sequence: 1
-              gas: 200000
-              gas_adjustment: 1.2
-              fees:
-              - denom: token
-                amount: 50
-              simulate: false
-            denom: crypto-kitties
-            id: aaa
   schemas:
     BaseReq:
       type: object
@@ -378,7 +376,7 @@ components:
         fees:
           type: array
           items:
-            $ref: '#/definitions/Fee'
+            $ref: '#/components/schemas/Fee'
         simulate:
           type: boolean
       required:
