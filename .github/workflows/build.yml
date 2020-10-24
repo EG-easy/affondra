@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: voter
+name: affondra
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         targetos: [windows, darwin]
-    name: voter for ${{ matrix.targetos }}
+    name: affondra for ${{ matrix.targetos }}
     steps:
       - uses: actions/checkout@v2
 
@@ -31,7 +31,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: voter ${{ matrix.targetos }}
+          name: affondra ${{ matrix.targetos }}
           path: build
 
   linux:
@@ -39,7 +39,7 @@ jobs:
     strategy:
       matrix:
         arch: [arm64, riscv64, amd64]
-    name: voter for ${{ matrix.arch }}
+    name: affondra for ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v2
 
@@ -55,5 +55,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: voter ${{ matrix.arch }}
+          name: affondra ${{ matrix.arch }}
           path: build
