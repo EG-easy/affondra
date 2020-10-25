@@ -29,6 +29,15 @@ func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateIt
 	if !msg.Creator.Equals(nft.GetOwner()) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Incorrect Owner")
 	}
+	//check if affiliate <= price
+	if msg.Price.IsLT(msg.Affiliate) {
+		return nil, sdkerrors.Wrap(types.ErrInvalidAffiliatePrice, "Incorrect affiliate price")
+	}
+	//check if on sale
+	//	if msg.InSale {
+	//		return nil, sdkerrors.Wrap(types.ErrAlreadyOnSale, "Alrady on sale")
+	//	}
+
 	k.CreateItem(ctx, item)
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
