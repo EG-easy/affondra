@@ -14,11 +14,11 @@ type MsgCreateItem struct {
 	Denom     string         `json:"denom" yaml:"denom"`
 	NftId     string         `json:"nftId" yaml:"nftId"`
 	Price     sdk.Coin       `json:"price" yaml:"price"`
-	Affiliate int32          `json:"affiliate" yaml:"affiliate"`
+	Affiliate sdk.Coin       `json:"affiliate" yaml:"affiliate"`
 	InSale    bool           `json:"inSale" yaml:"inSale"`
 }
 
-func NewMsgCreateItem(creator sdk.AccAddress, denom string, nftId string, price sdk.Coin, affiliate int32, inSale bool) MsgCreateItem {
+func NewMsgCreateItem(creator sdk.AccAddress, denom string, nftId string, price sdk.Coin, affiliate sdk.Coin, inSale bool) MsgCreateItem {
 	return MsgCreateItem{
 		ID:        uuid.New().String(),
 		Creator:   creator,

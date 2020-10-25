@@ -23,13 +23,13 @@ func GetCmdCreateItem(cdc *codec.Codec) *cobra.Command {
 			argsDenom := string(args[0])
 			argsNftId := string(args[1])
 			argsPrice, _ := sdk.ParseCoin(args[2])
-			argsAffiliate, _ := strconv.ParseInt(args[3], 10, 64)
+			argsAffiliate, _ := sdk.ParseCoin(args[3])
 			argsInSale, _ := strconv.ParseBool(args[4])
 
 			cliCtx := context.NewCLIContext().WithCodec(cdc)
 			inBuf := bufio.NewReader(cmd.InOrStdin())
 			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(utils.GetTxEncoder(cdc))
-			msg := types.NewMsgCreateItem(cliCtx.GetFromAddress(), string(argsDenom), string(argsNftId), argsPrice, int32(argsAffiliate), bool(argsInSale))
+			msg := types.NewMsgCreateItem(cliCtx.GetFromAddress(), string(argsDenom), string(argsNftId), argsPrice, argsAffiliate, bool(argsInSale))
 			err := msg.ValidateBasic()
 			if err != nil {
 				return err
@@ -49,13 +49,13 @@ func GetCmdSetItem(cdc *codec.Codec) *cobra.Command {
 			argsDenom := string(args[1])
 			argsNftId := string(args[2])
 			argsPrice, _ := sdk.ParseCoin(args[3])
-			argsAffiliate, _ := strconv.ParseInt(args[4], 10, 64)
+			argsAffiliate, _ := sdk.ParseCoin(args[4])
 			argsInSale, _ := strconv.ParseBool(args[5])
 
 			cliCtx := context.NewCLIContext().WithCodec(cdc)
 			inBuf := bufio.NewReader(cmd.InOrStdin())
 			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(utils.GetTxEncoder(cdc))
-			msg := types.NewMsgSetItem(cliCtx.GetFromAddress(), id, string(argsDenom), string(argsNftId), argsPrice, int32(argsAffiliate), bool(argsInSale))
+			msg := types.NewMsgSetItem(cliCtx.GetFromAddress(), id, string(argsDenom), string(argsNftId), argsPrice, argsAffiliate, bool(argsInSale))
 			err := msg.ValidateBasic()
 			if err != nil {
 				return err
