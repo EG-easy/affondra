@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/EG-easy/affondra/x/affondra/types"
 	"github.com/cosmos/cosmos-sdk/client/context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
@@ -38,11 +39,11 @@ func getItemHandler(cliCtx context.CLIContext, storeName string) http.HandlerFun
 func getItemByOwner(cliCtx context.CLIContext, storeName string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("address: %s", mux.Vars(r))
-		address, err := sdk.AccAddressFromBech32(mux.Vars(r)["creatorAddr"])
+		address, err := sdk.AccAddressFromBech32(mux.Vars(r)["ownerAddr"])
 
 		fmt.Printf("address: %b", address)
 
-		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/get-item/%s", storeName, address), nil)
+		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", storeName, types.QueryOwner, address), nil)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusNotFound, err.Error())
 			return

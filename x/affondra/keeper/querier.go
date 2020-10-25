@@ -18,6 +18,8 @@ func NewQuerier(k Keeper) sdk.Querier {
 		fmt.Printf("path from New Querier: %s", path)
 		switch path[0] {
 		// this line is used by starport scaffolding # 2
+		case types.QueryOwner:
+			return queryOwner(ctx, path[1:], req, k)
 		case types.QueryListItem:
 			return listItem(ctx, k)
 		case types.QueryGetItem:
@@ -34,4 +36,20 @@ func NewQuerier(k Keeper) sdk.Querier {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown affondra query endpoint")
 		}
 	}
+}
+
+func queryOwner(ctx sdk.Context, path []string, req abci.RequestQuery, k Keeper) ([]byte, error) {
+	var params types.QueryOwnerParams
+
+	err := types.ModuleCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, err.Error())
+	}
+
+	owner := k.GetOwner(ctx, params.Owner)
+	bz, err := types.ModuleCdc.MarshalJSON(owner)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+	return bz, nil
 }
