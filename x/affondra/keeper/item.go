@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -62,6 +64,7 @@ func listItem(ctx sdk.Context, k Keeper) ([]byte, error) {
 
 func getItem(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError error) {
 	key := path[0]
+	fmt.Printf("key from getItem: %s", key)
 	item, err := k.GetItem(ctx, key)
 	if err != nil {
 		return nil, err
