@@ -42,9 +42,9 @@ func SplitOwnerKey(key []byte) (sdk.AccAddress, []byte) {
 	}
 
 	address := key[1 : sdk.AddrLen+1]
-	denomHashBz := key[sdk.AddrLen+1:]
+	IDsBz := key[sdk.AddrLen+1:]
 
-	return sdk.AccAddress(address), denomHashBz
+	return sdk.AccAddress(address), IDsBz
 }
 
 func GetOwnerKey(address sdk.AccAddress) []byte {
