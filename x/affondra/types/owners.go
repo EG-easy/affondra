@@ -6,38 +6,54 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
-
-type ItemCollection struct {
-	IDs SortedStringArray `json:"ids" yaml:"ids"`
-}
 
 type SortedStringArray []string
 
 type Owner struct {
-	Address         sdk.AccAddress   `json:"address" yaml:"address"`
-	ItemCollections []ItemCollection `json:"itemCollections" yaml:"itemCollections"`
+	Address sdk.AccAddress    `json:"address" yaml:"address"`
+	IDs     SortedStringArray `json:"ids" yaml:"ids"`
 }
 
-func NewItemCollection(ids []string) ItemCollection {
-	return ItemCollection{
-		IDs: SortedStringArray(ids).Sort(),
+func NewOwner(owner sdk.AccAddress, ids []string) Owner {
+	return Owner{
+		Address: owner,
+		IDs:     SortedStringArray(ids).Sort(),
 	}
+}
+
+func (owner Owner) Exists(id string) (exsits bool) {
+	index := owner.IDs.find(id)
+	return index != -1
+}
+
+func (owner Owner) AddID(id string) Owner {
+	owner.IDs = append(owner.IDs, id).Sort()
+	return owner
+}
+
+func (owner Owner) DeleteID(id string) (Owner, error) {
+	index := owner.IDs.find(id)
+	if index == -1 {
+		return owner, sdkerrors.Wrap(ErrUnknownID, fmt.Sprintf("Item #%s doesn't exsit in this Owner %s", id, owner.Address))
+	}
+
+	owner.IDs = append(owner.IDs[:index], owner.IDs[index+1:]...)
+
+	return owner, nil
 }
 
 func (owner Owner) Supply() int {
-	total := 0
-	for _, itemCollection := range owner.ItemCollections {
-		total += itemCollection.Supply()
-	}
-	return total
+	return len(owner.IDs)
 }
 
-func NewOwner(owner sdk.AccAddress, itemCollections ...ItemCollection) Owner {
-	return Owner{
-		Address:         owner,
-		ItemCollections: itemCollections,
-	}
+func (owner Owner) String() string {
+	return fmt.Sprintf(`Address:%s
+		IDs:%s`,
+		owner.Address,
+		strings.Join(owner.IDs, ","),
+	)
 }
 
 // ========== SortedStringArray implementation ==========
@@ -45,26 +61,14 @@ func (sa SortedStringArray) String() string {
 	return strings.Join(sa[:], ",")
 }
 
-//func (itemCollection ItemCollection) Exsits(id string) (exsits bool) {
-//	index := itemCollection.IDs.find(id)
-//	return index != -1
-//}
-
-//func (itemCollection ItemCollection) AddID(id string) ItemCollection {
-//	itemCollection.IDs = append(itemCollection.IDs, id).Sort()
-//	return itemCollection
-//}
-
-// ========== itemCollection implementation ==========
-func (itemCollection ItemCollection) Supply() int {
-	return len(itemCollection.IDs)
+func (sa SortedStringArray) ElAtIndex(index int) string {
+	return sa[index]
 }
 
-func (itemCollection ItemCollection) String() string {
-	return fmt.Sprintf(`IDs:%s`, strings.Join(itemCollection.IDs, ","))
+func (sa SortedStringArray) find(el string) (idx int) {
+	return FindUtil(sa, el)
 }
 
-// ========== Sort implementation ==========
 func (sa SortedStringArray) Len() int {
 	return len(sa)
 }

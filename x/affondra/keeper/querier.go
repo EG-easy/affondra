@@ -48,7 +48,7 @@ func queryOwner(ctx sdk.Context, path []string, req abci.RequestQuery, k Keeper)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, err.Error())
 	}
 
-	owner := k.GetOwner(ctx, address)
+	owner, _ := k.GetOwner(ctx, address)
 	bz, err := types.ModuleCdc.MarshalJSON(owner)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())

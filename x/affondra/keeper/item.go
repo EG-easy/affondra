@@ -16,6 +16,11 @@ func (k Keeper) CreateItem(ctx sdk.Context, item types.Item) {
 	key := []byte(types.ItemPrefix + item.ID)
 	value := k.cdc.MustMarshalBinaryLengthPrefixed(item)
 	store.Set(key, value)
+
+	//register owner info
+	owner, _ := k.GetOwner(ctx, item.GetOwner())
+	owner = owner.AddID(item.GetID())
+	k.SetOwner(ctx, item.GetOwner(), owner.IDs)
 }
 
 // GetItem returns the item information
