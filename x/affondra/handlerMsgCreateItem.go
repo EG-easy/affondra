@@ -9,15 +9,8 @@ import (
 )
 
 func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateItem) (*sdk.Result, error) {
-	var item = types.Item{
-		Creator:   msg.Creator,
-		ID:        msg.ID,
-		Denom:     msg.Denom,
-		NftId:     msg.NftId,
-		Price:     msg.Price,
-		Affiliate: msg.Affiliate,
-		InSale:    msg.InSale,
-	}
+
+	item := types.NewItem(msg.ID, msg.Creator, msg.Denom, msg.NftId, msg.Price, msg.Affiliate, msg.InSale)
 
 	nft, err := k.NFTKeeper.GetNFT(ctx, msg.Denom, msg.NftId)
 
