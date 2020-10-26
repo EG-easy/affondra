@@ -15,7 +15,7 @@ import (
 // NewQuerier creates a new querier for affondra clients.
 func NewQuerier(k Keeper) sdk.Querier {
 	return func(ctx sdk.Context, path []string, req abci.RequestQuery) ([]byte, error) {
-		fmt.Printf("path from New Querier: %s", path)
+		fmt.Printf("path from New Querier: %s\n", path)
 		switch path[0] {
 		// this line is used by starport scaffolding # 2
 		case types.QueryOwner:
@@ -39,14 +39,16 @@ func NewQuerier(k Keeper) sdk.Querier {
 }
 
 func queryOwner(ctx sdk.Context, path []string, req abci.RequestQuery, k Keeper) ([]byte, error) {
-	var params types.QueryOwnerParams
+	fmt.Print("===start query owner===\n")
+	fmt.Printf("request: %v\n", req)
+	fmt.Printf("path: %s\n", path)
 
-	err := types.ModuleCdc.UnmarshalJSON(req.Data, &params)
+	address, err := sdk.AccAddressFromBech32(path[0])
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, err.Error())
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, err.Error())
 	}
 
-	owner := k.GetOwner(ctx, params.Owner)
+	owner := k.GetOwner(ctx, address)
 	bz, err := types.ModuleCdc.MarshalJSON(owner)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())

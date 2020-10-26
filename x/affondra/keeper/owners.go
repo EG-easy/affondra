@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/EG-easy/affondra/x/affondra/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -14,6 +16,7 @@ func (k Keeper) GetOwner(ctx sdk.Context, address sdk.AccAddress) (owner types.O
 		},
 	)
 
+	fmt.Printf("itemCollections from GetOwner: %v\n", itemCollections)
 	return types.NewOwner(address, itemCollections...)
 }
 
@@ -33,17 +36,36 @@ func (k Keeper) GetOwner(ctx sdk.Context, address sdk.AccAddress) (owner types.O
 //}
 
 func (k Keeper) IterateItemCollections(ctx sdk.Context, prefix []byte, handler func(owner sdk.AccAddress, itemCollection types.ItemCollection) (stop bool)) {
+
+	fmt.Print("===start IterateItemCollections===\n")
 	store := ctx.KVStore(k.storeKey)
+
+	fmt.Printf("store: %v\n", store)
+	fmt.Printf("store: %s\n", fmt.Sprintf("%s", store))
+
 	iterator := sdk.KVStorePrefixIterator(store, prefix)
+
+	fmt.Printf("prefix: %b\n", prefix)
+
+	fmt.Printf("iterator: %v\n", iterator)
+	fmt.Printf("iterator valid: %v\n", iterator.Valid())
+	fmt.Printf("iterator value: %v\n", iterator.Value())
+	fmt.Printf("iterator error: %v\n", iterator.Error())
+	fmt.Printf("iterator key: %v\n", iterator.Key())
+
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var itemCollection types.ItemCollection
 		k.cdc.MustUnmarshalBinaryLengthPrefixed(iterator.Value(), &itemCollection)
 
+		fmt.Printf("iterator key: %b\n", iterator.Key())
+
 		owner, _ := types.SplitOwnerKey(iterator.Key())
+
+		fmt.Printf("owner: %b\n", owner)
+
 		if handler(owner, itemCollection) {
 			break
 		}
-
 	}
 }

@@ -38,10 +38,14 @@ func getItemHandler(cliCtx context.CLIContext, storeName string) http.HandlerFun
 
 func getItemByOwner(cliCtx context.CLIContext, storeName string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("address: %s", mux.Vars(r))
-		address, err := sdk.AccAddressFromBech32(mux.Vars(r)["ownerAddr"])
+		fmt.Printf("address(string): %s\n", mux.Vars(r))
 
-		fmt.Printf("address: %b", address)
+		address, err := sdk.AccAddressFromBech32(mux.Vars(r)["ownerAddr"])
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+		}
+
+		fmt.Printf("address(byte): %b\n", address)
 
 		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", storeName, types.QueryOwner, address), nil)
 		if err != nil {

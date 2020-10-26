@@ -48,5 +48,6 @@ func SplitOwnerKey(key []byte) (sdk.AccAddress, []byte) {
 }
 
 func GetOwnerKey(address sdk.AccAddress) []byte {
+	fmt.Printf("OwnersKeyPrefix: %b\n", OwnersKeyPrefix)
 	return append(OwnersKeyPrefix, address.Bytes()...)
 }
