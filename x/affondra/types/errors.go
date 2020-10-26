@@ -5,6 +5,7 @@ import (
 )
 
 var (
-	ErrInvalidAffiliatePrice = sdkerrors.Register(ModuleName, 100, "[affondra] Affiliate should be less than Price")
+	ErrInvalidAffiliatePrice = sdkerrors.Register(ModuleName, 1, "[affondra] Affiliate should be less than Price")
 	ErrAlreadyOnSale         = sdkerrors.Register(ModuleName, 2, "[affondra] The NFT is already on Sale")
+	ErrUnknownID             = sdkerrors.Register(ModuleName, 3, "[affondra] Unknown Item collection")
 )
