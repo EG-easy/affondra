@@ -49,6 +49,16 @@ func (k Keeper) GetItem(ctx sdk.Context, key string) (types.Item, error) {
 	return item, nil
 }
 
+func (k Keeper) BuyItem(ctx sdk.Context, key string, receiver sdk.AccAddress) (err error) {
+	item, err := k.GetItem(ctx, key)
+	if err != nil {
+		return err
+	}
+	item.SetReceiver(receiver)
+	k.SetItem(ctx, item)
+	return nil
+}
+
 // SetItem sets a item
 func (k Keeper) SetItem(ctx sdk.Context, item types.Item) {
 	itemKey := item.ID
