@@ -20,6 +20,8 @@ func NewQuerier(k Keeper) sdk.Querier {
 		// this line is used by starport scaffolding # 2
 		case types.QueryOwner:
 			return queryOwner(ctx, path[1:], req, k)
+		case types.QueryDenom:
+			return queryCollection(ctx, path[1:], req, k)
 		case types.QueryListItem:
 			return listItem(ctx, k)
 		case types.QueryGetItem:
@@ -50,6 +52,27 @@ func queryOwner(ctx sdk.Context, path []string, req abci.RequestQuery, k Keeper)
 
 	owner, _ := k.GetOwner(ctx, address)
 	bz, err := types.ModuleCdc.MarshalJSON(owner)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+	return bz, nil
+}
+
+func queryCollection(ctx sdk.Context, path []string, req abci.RequestQuery, k Keeper) ([]byte, error) {
+	fmt.Print("===start query collection===\n")
+	fmt.Printf("request: %v\n", req)
+	fmt.Printf("path: %s\n", path)
+
+	denom := path[0]
+	collection, found := k.GetCollection(ctx, denom)
+	fmt.Printf("collection: %v\n", collection)
+	fmt.Printf("found: %v\n", found)
+
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrUnknownCollection, fmt.Sprintf("unknown denom %s", denom))
+	}
+
+	bz, err := types.ModuleCdc.MarshalJSON(collection)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
 	}

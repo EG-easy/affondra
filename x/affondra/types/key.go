@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/tendermint/crypto/tmhash"
 )
 
 const (
@@ -33,8 +34,21 @@ const (
 )
 
 var (
-	OwnersKeyPrefix = []byte{0x00}
+	CollectionsKeyPrefix = []byte{0x00} // key for Item Collection
+	OwnersKeyPrefix      = []byte{0x01}
 )
+
+// GetCollectionKey gets the key of a collection
+func GetCollectionKey(denom string) []byte {
+	h := tmhash.New()
+	_, err := h.Write([]byte(denom))
+	if err != nil {
+		panic(err)
+	}
+	bs := h.Sum(nil)
+
+	return append(CollectionsKeyPrefix, bs...)
+}
 
 func SplitOwnerKey(key []byte) (sdk.AccAddress, []byte) {
 	if len(key) != 53 {

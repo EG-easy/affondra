@@ -61,7 +61,7 @@ func getItemByDenom(cliCtx context.CLIContext, storeName string) http.HandlerFun
 		denom := mux.Vars(r)["denom"]
 		fmt.Printf("denom: %s", denom)
 
-		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/get-item/%s", storeName, denom), nil)
+		res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/%s/%s", storeName, types.QueryDenom, denom), nil)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusNotFound, err.Error())
 			return
