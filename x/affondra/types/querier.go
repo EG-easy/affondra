@@ -14,8 +14,6 @@ type QueryOwnerParams struct {
 }
 
 // QueryCollectionParams defines the params for queries:
-// - 'custom/nft/supply'
-// - 'custom/nft/collection'
 type QueryCollectionParams struct {
 	Denom string
 }
