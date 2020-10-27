@@ -15,8 +15,8 @@ all: install
 
 install: go.sum
 		@echo "--> Installing affondrad & affondracli"
-		@go install -mod=readonly $(BUILD_FLAGS) ./cmd/affondrad
-		@go install -mod=readonly $(BUILD_FLAGS) ./cmd/affondracli
+		@go install -mod=readonly $(BUILD_FLAGS) -tags faucet ./cmd/affondrad
+		@go install -mod=readonly $(BUILD_FLAGS) -tags faucet ./cmd/affondracli
 
 go.sum: go.mod
 		@echo "--> Ensure dependencies have not been modified"

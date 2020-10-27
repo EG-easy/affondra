@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"time"
 
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -27,6 +28,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/supply"
 
 	// this line is used by starport scaffolding # 1
+	"github.com/cosmos/modules/incubator/faucet"
 	"github.com/cosmos/modules/incubator/nft"
 )
 
@@ -45,12 +47,14 @@ var (
 		affondra.AppModuleBasic{},
 		// this line is used by starport scaffolding # 2
 		nft.AppModuleBasic{},
+		faucet.AppModule{},
 	)
 
 	maccPerms = map[string][]string{
 		auth.FeeCollectorName:     nil,
 		staking.BondedPoolName:    {supply.Burner, supply.Staking},
 		staking.NotBondedPoolName: {supply.Burner, supply.Staking},
+		faucet.ModuleName:         {supply.Minter}, // add permissions for faucet
 	}
 )
 
@@ -82,8 +86,10 @@ type NewApp struct {
 	paramsKeeper   params.Keeper
 	affondraKeeper affondrakeeper.Keeper
 	// this line is used by starport scaffolding # 3
-	NFTKeeper nft.Keeper
-	mm        *module.Manager
+	NFTKeeper    nft.Keeper
+	faucetKeeper faucet.Keeper
+
+	mm *module.Manager
 
 	sm *module.SimulationManager
 }
@@ -109,6 +115,7 @@ func NewInitApp(
 		affondratypes.StoreKey,
 		// this line is used by starport scaffolding # 5
 		nft.StoreKey,
+		faucet.StoreKey,
 	)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
@@ -168,6 +175,14 @@ func NewInitApp(
 		keys[affondratypes.StoreKey],
 	)
 
+	app.faucetKeeper = faucet.NewKeeper(
+		app.supplyKeeper,
+		app.stakingKeeper,
+		10*1000000,   // amount for mint
+		24*time.Hour, // rate limit by time
+		keys[faucet.StoreKey],
+		app.cdc)
+
 	// this line is used by starport scaffolding # 4
 
 	app.mm = module.NewManager(
@@ -179,6 +194,7 @@ func NewInitApp(
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		// this line is used by starport scaffolding # 6
 		nft.NewAppModule(app.NFTKeeper, app.accountKeeper),
+		faucet.NewAppModule(app.faucetKeeper),
 	)
 
 	app.mm.SetOrderEndBlockers(staking.ModuleName)
