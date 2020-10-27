@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -9,11 +11,30 @@ import (
 )
 
 // CreateItem creates a item
-func (k Keeper) CreateItem(ctx sdk.Context, item types.Item) {
+func (k Keeper) CreateItem(ctx sdk.Context, item types.Item) (err error) {
 	store := ctx.KVStore(k.storeKey)
 	key := []byte(types.ItemPrefix + item.ID)
 	value := k.cdc.MustMarshalBinaryLengthPrefixed(item)
 	store.Set(key, value)
+
+	// register collection info
+	collection, found := k.GetCollection(ctx, item.GetDenom())
+	if found {
+		collection, err = collection.AddItem(item)
+		if err != nil {
+			return err
+		}
+	} else {
+		collection = types.NewCollection(item.GetDenom(), types.NewItems(item))
+	}
+	k.SetCollection(ctx, item.GetDenom(), collection)
+
+	//register owner info
+	owner, _ := k.GetOwner(ctx, item.GetOwner())
+	owner = owner.AddID(item.GetID())
+	k.SetOwner(ctx, item.GetOwner(), owner.IDs)
+
+	return nil
 }
 
 // GetItem returns the item information
@@ -62,6 +83,7 @@ func listItem(ctx sdk.Context, k Keeper) ([]byte, error) {
 
 func getItem(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError error) {
 	key := path[0]
+	fmt.Printf("key from getItem: %s", key)
 	item, err := k.GetItem(ctx, key)
 	if err != nil {
 		return nil, err

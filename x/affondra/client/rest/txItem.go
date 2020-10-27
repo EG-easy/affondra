@@ -45,19 +45,17 @@ func createItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 
 		parsedNftId := req.NftId
 
-		parsedPrice64, err := strconv.ParseInt(req.Price, 10, 32)
+		parsedPrice, err := sdk.ParseCoin(req.Price)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-		parsedPrice := int32(parsedPrice64)
 
-		parsedAffiliate64, err := strconv.ParseInt(req.Affiliate, 10, 32)
+		parsedAffiliate, err := sdk.ParseCoin(req.Affiliate)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-		parsedAffiliate := int32(parsedAffiliate64)
 
 		parsedInSale, err := strconv.ParseBool(req.InSale)
 		if err != nil {
@@ -116,19 +114,16 @@ func setItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 
 		parsedNftId := req.NftId
 
-		parsedPrice64, err := strconv.ParseInt(req.Price, 10, 32)
+		parsedPrice, err := sdk.ParseCoin(req.Price)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-		parsedPrice := int32(parsedPrice64)
-
-		parsedAffiliate64, err := strconv.ParseInt(req.Affiliate, 10, 32)
+		parsedAffiliate, err := sdk.ParseCoin(req.Affiliate)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-		parsedAffiliate := int32(parsedAffiliate64)
 
 		parsedInSale, err := strconv.ParseBool(req.InSale)
 		if err != nil {

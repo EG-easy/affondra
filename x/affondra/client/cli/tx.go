@@ -26,12 +26,6 @@ func GetTxCmd(cdc *codec.Codec) *cobra.Command {
 		GetCmdCreateItem(cdc),
 		GetCmdSetItem(cdc),
 		GetCmdDeleteItem(cdc),
-		GetCmdCreateVote(cdc),
-		GetCmdSetVote(cdc),
-		GetCmdDeleteVote(cdc),
-		GetCmdCreatePoll(cdc),
-		GetCmdSetPoll(cdc),
-		GetCmdDeletePoll(cdc),
 	)...)
 
 	return affondraTxCmd

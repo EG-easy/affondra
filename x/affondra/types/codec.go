@@ -10,12 +10,6 @@ func RegisterCodec(cdc *codec.Codec) {
 	cdc.RegisterConcrete(MsgCreateItem{}, "affondra/CreateItem", nil)
 	cdc.RegisterConcrete(MsgSetItem{}, "affondra/SetItem", nil)
 	cdc.RegisterConcrete(MsgDeleteItem{}, "affondra/DeleteItem", nil)
-	cdc.RegisterConcrete(MsgCreateVote{}, "affondra/CreateVote", nil)
-	cdc.RegisterConcrete(MsgSetVote{}, "affondra/SetVote", nil)
-	cdc.RegisterConcrete(MsgDeleteVote{}, "affondra/DeleteVote", nil)
-	cdc.RegisterConcrete(MsgCreatePoll{}, "affondra/CreatePoll", nil)
-	cdc.RegisterConcrete(MsgSetPoll{}, "affondra/SetPoll", nil)
-	cdc.RegisterConcrete(MsgDeletePoll{}, "affondra/DeletePoll", nil)
 }
 
 // ModuleCdc defines the module codec
