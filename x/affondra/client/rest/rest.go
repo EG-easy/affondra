@@ -16,4 +16,5 @@ func RegisterRoutes(cliCtx context.CLIContext, r *mux.Router) {
 	r.HandleFunc("/affondra/item/{id}", getItemById(cliCtx, "affondra")).Methods("GET")
 	r.HandleFunc("/affondra/item", setItemHandler(cliCtx)).Methods("PUT")
 	r.HandleFunc("/affondra/item", deleteItemHandler(cliCtx)).Methods("DELETE")
+	r.HandleFunc("/affondra/item/buy", buyItemHandler(cliCtx)).Methods("POST")
 }

@@ -68,6 +68,14 @@ func (item Item) SetOwner(addr sdk.AccAddress) {
 	item.Creator = addr
 }
 
+func (item Item) SetReceiver(addr sdk.AccAddress) {
+	item.Receiver = addr
+}
+
+func (item Item) ChangeInSaleStatus() {
+	item.InSale = !item.InSale
+}
+
 func (item Item) String() string {
 	return fmt.Sprintf(`ID:%s
 Creator:%s
