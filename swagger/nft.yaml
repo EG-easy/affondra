@@ -6,6 +6,8 @@ servers:
   - url: http://192.168.1.160:1317
 tags:
   - name: NFT
+  - name: Affondra
+  - name: Faucet
 paths:
 
   /nft/denoms:
@@ -309,6 +311,101 @@ paths:
         200:
           description: ''
           headers: {}
+
+  /affondra/item:
+    get:
+      summary: Get list of items.
+      tags:
+      - Affondra
+      operationId: /affondra/item
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /affondra/item/{id}:
+    get:
+      summary: Get a particular item.
+      tags:
+      - Affondra
+      operationId: /affondra/item/owner
+      parameters:
+      - name: "id"
+        description: 'item id (uuid)'
+        in: "path"
+        required: true
+        schema:
+          type: string
+          example: 3af286d7-f61b-4525-b3b2-53e62c57babb
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /affondra/item/owner/{address}:
+    get:
+      summary: Get list of items of owner address.
+      tags:
+      - Affondra
+      operationId: /affondra/item/owner
+      parameters:
+      - name: "address"
+        description: 'An owner address'
+        in: "path"
+        required: true
+        schema:
+          type: string
+          example: cosmos1gzfwesw9h0yp6pjr32ku4f3f28usezzarrqegh
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /affondra/item/denom/{denom}:
+    get:
+      summary: Get list of items of particular denom.
+      tags:
+      - Affondra
+      operationId: /affondra/item/denom
+      parameters:
+      - in: "path"
+        name: "denom"
+        description: 'A NFT denom'
+        required: true
+        schema:
+          type: string
+          example: crypto-kitties
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
+  /faucet/mint:
+    post:
+      summary: Get faucet
+      tags:
+      - Faucet
+      operationId: /faucet/mint
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                type: "object"
+
 components:
   parameters:
     denom:
@@ -427,3 +524,44 @@ components:
       example:
         denom: token
         amount: 50
+    Coin:
+      type: object
+      properties:
+        denom:
+          type: string
+        amount:
+          type: integer
+      example:
+        denom: token
+        amount: 50
+    Item:
+      type: object
+      properties:
+        creator: 
+          type: string
+        id:
+          type: string
+        denom:
+          type: string
+        nftId:
+          type: string
+        price:
+          $ref: '#/components/schemas/Coin'
+        affiliate:
+          $ref: '#/components/schemas/Coin'
+        receiver:
+          type: string
+        insale: 
+          type: boolean
+      example:
+        creator: cosmos10dhsus4sl07vu0mltw74jmseh64ayxg63mqhm9
+        id: 3af286d7-f61b-4525-b3b2-53e62c57babb
+        denom: crypto-kitties
+        nftId: aaa
+        price: {denom: token, amount: 1000}
+        affiliate: {denom: token, amount: 1000}
+        receiver: 
+        insale: true
+
+      
+
