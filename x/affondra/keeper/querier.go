@@ -26,14 +26,6 @@ func NewQuerier(k Keeper) sdk.Querier {
 			return listItem(ctx, k)
 		case types.QueryGetItem:
 			return getItem(ctx, path[1:], k)
-		case types.QueryListVote:
-			return listVote(ctx, k)
-		case types.QueryGetVote:
-			return getVote(ctx, path[1:], k)
-		case types.QueryListPoll:
-			return listPoll(ctx, k)
-		case types.QueryGetPoll:
-			return getPoll(ctx, path[1:], k)
 		default:
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown affondra query endpoint")
 		}

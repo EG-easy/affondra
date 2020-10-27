@@ -32,10 +32,6 @@ func GetQueryCmd(queryRoute string, cdc *codec.Codec) *cobra.Command {
 			// this line is used by starport scaffolding # 1
 			GetCmdListItem(queryRoute, cdc),
 			GetCmdGetItem(queryRoute, cdc),
-			GetCmdListVote(queryRoute, cdc),
-			GetCmdGetVote(queryRoute, cdc),
-			GetCmdListPoll(queryRoute, cdc),
-			GetCmdGetPoll(queryRoute, cdc),
 		)...,
 	)
 

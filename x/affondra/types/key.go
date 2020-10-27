@@ -22,14 +22,6 @@ const (
 )
 
 const (
-	PollPrefix = "poll-"
-)
-
-const (
-	VotePrefix = "vote-"
-)
-
-const (
 	ItemPrefix = "item-"
 )
 

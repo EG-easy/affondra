@@ -21,18 +21,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return handleMsgSetItem(ctx, k, msg)
 		case types.MsgDeleteItem:
 			return handleMsgDeleteItem(ctx, k, msg)
-		case types.MsgCreateVote:
-			return handleMsgCreateVote(ctx, k, msg)
-		case types.MsgSetVote:
-			return handleMsgSetVote(ctx, k, msg)
-		case types.MsgDeleteVote:
-			return handleMsgDeleteVote(ctx, k, msg)
-		case types.MsgCreatePoll:
-			return handleMsgCreatePoll(ctx, k, msg)
-		case types.MsgSetPoll:
-			return handleMsgSetPoll(ctx, k, msg)
-		case types.MsgDeletePoll:
-			return handleMsgDeletePoll(ctx, k, msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
