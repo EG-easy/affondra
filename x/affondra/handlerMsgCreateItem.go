@@ -32,5 +32,13 @@ func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateIt
 	//	}
 
 	k.CreateItem(ctx, item)
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeCreateItem,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Creator.String()),
+		),
+	})
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }

@@ -62,6 +62,13 @@ func handleMsgBuyItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgBuyItem) (*
 	}
 
 	//:TODO adding event here
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeBuyItem,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Receiver.String()),
+		),
+	})
 
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
