@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <button class="button">{{ value }}</button>
-  </div>
+<div>
+  <button class="button">{{ value }}</button>
+</div>
 </template>
 
 <style scoped>
@@ -23,14 +23,17 @@
   font-size: 1rem;
   font-weight: inherit;
 }
+
 .button:hover {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1),
     0 1px 5px -1px rgba(0, 0, 0, 0.1);
 }
+
 .button:focus {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2),
     0 1px 5px -1px rgba(0, 0, 0, 0.1);
 }
+
 .button:active {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07);
   color: rgba(0, 0, 0, 0.7);
@@ -41,7 +44,7 @@
 <script>
 export default {
   props: {
-    value: "",
+    value: String,
   },
 };
 </script>

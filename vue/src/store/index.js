@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import app from "./app.js";
-import cosmos from "@tendermint/vue/src/store/cosmos.js";
+// import cosmos from "@tendermint/vue/src/store/cosmos.js";
 import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cosmjs/launchpad";
 
 Vue.use(Vuex);
@@ -47,7 +47,7 @@ export default new Vuex.Store({
     },
     async accountSignIn({ commit }, { mnemonic }) {
 			console.log(mnemonic);
-      return new Promise(async (resolve, reject) => {
+      const tmp = async function() {
         const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
         const [{ address }] = await wallet.getAccounts();
         const url = `${API}/auth/accounts/${address}`;
@@ -57,11 +57,11 @@ export default new Vuex.Store({
           const client = new SigningCosmosClient(API, address, wallet);
           commit("accountUpdate", { account });
           commit("clientUpdate", { client });
-          resolve(account);
-        } else {
-          reject("Account doesn't exist.");
+          return account;
         }
-      });
+        throw new Error("Account doesn't exist.");
+      };
+      return Promise.resolve(tmp);
     },
     async entityFetch({ state, commit }, { type }) {
       const { chain_id } = state;
