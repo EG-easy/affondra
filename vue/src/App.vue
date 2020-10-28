@@ -49,7 +49,7 @@
 
   <!-- Hero content: will be in the middle -->
   <div class="hero-body">
-    <div class="container has-background-white">
+    <div class="container has-background-white has-text-black">
       <router-view />
     </div>
   </div>

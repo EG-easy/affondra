@@ -8,11 +8,11 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: Index,
+    component: Buy,
   },
   {
     path: "/buy",
-    component: Buy,
+    component: Index,
   },
 ];
 
