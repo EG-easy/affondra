@@ -6,7 +6,7 @@
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item">
-            <img src="https://bulma.io/images/bulma-type-white.png" alt="Logo">
+            <img src="@/assets/affondra.logo.png" alt="Logo">
           </a>
           <span class="navbar-burger burger" data-target="navbarMenuHeroA">
             <span></span>
@@ -23,24 +23,28 @@
               Listing
             </a>
             <a class="navbar-item">
-              About
+              History
             </a>
-            <span class="navbar-item">
-              <v-btn :loading="false" :disabled="false" :class="button" @click="submit">
-                Get Token
-                <v-icon right dark>
-                  mdi-login
-                </v-icon>
-              </v-btn>
-            </span>
-            <span class="navbar-item">
-              <v-btn :loading="false" :disabled="false" :class="button" @click="alert('login')">
-                Login
-                <v-icon right dark>
-                  mdi-login
-                </v-icon>
-              </v-btn>
-            </span>
+            <div class="navbar-item">
+              <button class="button is-rounded">
+                <span class="icon">
+                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M2 12C2 9.2 3.6 6.8 6 5.7V3.5C2.5 4.8 0 8.1 0 12S2.5 19.2 6 20.5V18.3C3.6 17.2 2 14.8 2 12M15 3C10 3 6 7 6 12S10 21 15 21 24 17 24 12 20 3 15 3M20 13H16V17H14V13H10V11H14V7H16V11H20V13Z" />
+                  </svg>
+                </span>
+                <span>Get Tokens</span>
+              </button>
+            </div>
+            <div class="navbar-item">
+              <button class="button is-rounded">
+                <span class="icon">
+                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
+                  </svg>
+                </span>
+                <span>Login</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

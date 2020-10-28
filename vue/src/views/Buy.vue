@@ -41,7 +41,7 @@ div.af-items {
 </style>
 
 <script>
-import ItemThumbnail from '../components/ItemThumbnail.vue'
+import ItemThumbnail from '@/components/ItemThumbnail.vue'
 
 export default {
   components: {
