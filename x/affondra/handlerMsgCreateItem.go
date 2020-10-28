@@ -10,14 +10,18 @@ import (
 
 func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateItem) (*sdk.Result, error) {
 
-	item := types.NewItem(msg.ID, msg.Creator, msg.Denom, msg.NftId, msg.Price, msg.Affiliate, msg.InSale)
-
 	nft, err := k.NFTKeeper.GetNFT(ctx, msg.Denom, msg.NftId)
-
 	//check if nft is exist
 	if err != nil {
 		return nil, err
 	}
+	//check if the item already exsits
+	exsits := k.ItemExists(ctx, msg.ID)
+	if exsits {
+		return nil, sdkerrors.Wrap(types.ErrAlreadyOnSale, "The item is already on market")
+	}
+
+	item := types.NewItem(msg.ID, msg.Creator, msg.Denom, msg.NftId, nft.GetTokenURI(), msg.Price, msg.Affiliate, msg.InSale)
 	// check if owner is correct
 	if !msg.Creator.Equals(nft.GetOwner()) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Incorrect Owner")
@@ -26,10 +30,6 @@ func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateIt
 	if msg.Price.IsLT(msg.Affiliate) {
 		return nil, sdkerrors.Wrap(types.ErrInvalidAffiliatePrice, "Incorrect affiliate price")
 	}
-	//check if on sale
-	//	if msg.InSale {
-	//		return nil, sdkerrors.Wrap(types.ErrAlreadyOnSale, "Alrady on sale")
-	//	}
 
 	k.CreateItem(ctx, item)
 
