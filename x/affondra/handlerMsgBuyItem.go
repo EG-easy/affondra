@@ -55,14 +55,14 @@ func handleMsgBuyItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgBuyItem) (*
 		return nil, err
 	}
 
-	// payment to creator
-	payment := sdk.NewCoins(item.Price)
-	if err := k.CoinKeeper.SendCoins(ctx, msg.Receiver, item.Creator, payment); err != nil {
-		return nil, err
-	}
 	// pay for referral fee
 	referralFee := sdk.NewCoins(item.Affiliate)
 	if err := k.CoinKeeper.SendCoins(ctx, msg.Receiver, msg.IntroducedBy, referralFee); err != nil {
+		return nil, err
+	}
+	// payment to creator
+	payment, _ := sdk.NewCoins(item.Price).SafeSub(referralFee)
+	if err := k.CoinKeeper.SendCoins(ctx, msg.Receiver, item.Creator, payment); err != nil {
 		return nil, err
 	}
 
