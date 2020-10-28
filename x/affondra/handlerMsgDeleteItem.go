@@ -19,5 +19,14 @@ func handleMsgDeleteItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgDeleteIt
 	}
 
 	k.DeleteItem(ctx, msg.ID)
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeDeleteItem,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Creator.String()),
+		),
+	})
+
 	return &sdk.Result{}, nil
 }

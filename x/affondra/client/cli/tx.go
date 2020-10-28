@@ -26,6 +26,7 @@ func GetTxCmd(cdc *codec.Codec) *cobra.Command {
 		GetCmdCreateItem(cdc),
 		GetCmdSetItem(cdc),
 		GetCmdDeleteItem(cdc),
+		GetCmdBuyItem(cdc),
 	)...)
 
 	return affondraTxCmd

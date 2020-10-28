@@ -30,9 +30,16 @@ func (k Keeper) CreateItem(ctx sdk.Context, item types.Item) (err error) {
 	k.SetCollection(ctx, item.GetDenom(), collection)
 
 	//register owner info
-	owner, _ := k.GetOwner(ctx, item.GetOwner())
-	owner = owner.AddID(item.GetID())
-	k.SetOwner(ctx, item.GetOwner(), owner.IDs)
+	owner, found := k.GetOwner(ctx, item.GetOwner())
+	if found {
+		owner, err = owner.AddItem(item)
+		if err != nil {
+			return err
+		}
+	} else {
+		owner = types.NewOwner(item.GetOwner(), types.NewItems(item))
+	}
+	k.SetOwner(ctx, item.GetOwner(), owner)
 
 	return nil
 }

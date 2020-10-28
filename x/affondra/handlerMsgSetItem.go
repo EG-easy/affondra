@@ -24,5 +24,13 @@ func handleMsgSetItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgSetItem) (*
 
 	k.SetItem(ctx, item)
 
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetItem,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Creator.String()),
+		),
+	})
+
 	return &sdk.Result{Events: ctx.EventManager().Events()}, nil
 }
