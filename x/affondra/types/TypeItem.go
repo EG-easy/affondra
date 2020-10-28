@@ -16,6 +16,7 @@ type Item struct {
 	NftId     string         `json:"nftId" yaml:"nftId"`
 	Price     sdk.Coin       `json:"price" yaml:"price"`
 	Affiliate sdk.Coin       `json:"affiliate" yaml:"affiliate"`
+	Receiver  sdk.AccAddress `json:"receiver" yaml:"receiver"`
 	InSale    bool           `json:"inSale" yaml:"inSale"`
 }
 
@@ -27,6 +28,7 @@ func NewItem(id string, owner sdk.AccAddress, denom string, nftId string, price 
 		NftId:     nftId,
 		Price:     price,
 		Affiliate: affiliate,
+		Receiver:  nil, //Receiver will be decided after buying
 		InSale:    inSale,
 	}
 }
@@ -54,11 +56,24 @@ func (item Item) GetPrice() sdk.Coin {
 func (item Item) GetAffiliate() sdk.Coin {
 	return item.Affiliate
 }
+
+func (item Item) GetReceiver() sdk.AccAddress {
+	return item.Receiver
+}
+
 func (item Item) GetInSale() bool {
 	return item.InSale
 }
 func (item Item) SetOwner(addr sdk.AccAddress) {
 	item.Creator = addr
+}
+
+func (item Item) SetReceiver(addr sdk.AccAddress) {
+	item.Receiver = addr
+}
+
+func (item Item) ChangeInSaleStatus() {
+	item.InSale = !item.InSale
 }
 
 func (item Item) String() string {
@@ -68,6 +83,7 @@ Denom:%s
 NftId:%s
 Price:%s
 Affiliate:%s
+Receiver:%s
 InSale:%v`,
 		item.ID,
 		item.Creator,
@@ -75,6 +91,7 @@ InSale:%v`,
 		item.NftId,
 		item.Price,
 		item.Affiliate,
+		item.Receiver,
 		item.InSale,
 	)
 }
