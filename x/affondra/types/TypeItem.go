@@ -64,15 +64,15 @@ func (item Item) GetReceiver() sdk.AccAddress {
 func (item Item) GetInSale() bool {
 	return item.InSale
 }
-func (item Item) SetOwner(addr sdk.AccAddress) {
+func (item *Item) SetOwner(addr sdk.AccAddress) {
 	item.Creator = addr
 }
 
-func (item Item) SetReceiver(addr sdk.AccAddress) {
+func (item *Item) SetReceiver(addr sdk.AccAddress) {
 	item.Receiver = addr
 }
 
-func (item Item) ChangeInSaleStatus() {
+func (item *Item) ChangeInSaleStatus() {
 	item.InSale = !item.InSale
 }
 

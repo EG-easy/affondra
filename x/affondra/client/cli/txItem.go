@@ -85,3 +85,29 @@ func GetCmdDeleteItem(cdc *codec.Codec) *cobra.Command {
 		},
 	}
 }
+
+func GetCmdBuyItem(cdc *codec.Codec) *cobra.Command {
+	return &cobra.Command{
+		Use:   "buy-item [id] [introduced_by]",
+		Short: "Buy a item by ID",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+
+			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			inBuf := bufio.NewReader(cmd.InOrStdin())
+			txBldr := auth.NewTxBuilderFromCLI(inBuf).WithTxEncoder(utils.GetTxEncoder(cdc))
+
+			introducedBy, err := sdk.AccAddressFromBech32(args[1])
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgBuyItem(args[0], cliCtx.GetFromAddress(), introducedBy)
+			err = msg.ValidateBasic()
+			if err != nil {
+				return err
+			}
+			return utils.GenerateOrBroadcastMsgs(cliCtx, txBldr, []sdk.Msg{msg})
+		},
+	}
+}
