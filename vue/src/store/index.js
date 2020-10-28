@@ -2,12 +2,12 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import app from "./app.js";
-import cosmos from "@tendermint/vue/src/store/cosmos.js";
+// import cosmos from "@tendermint/vue/src/store/cosmos.js";
 import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cosmjs/launchpad";
 
 Vue.use(Vuex);
 
-const API = "http://localhost:1317";
+const API = "http://192.168.1.160:1317";
 const ADDRESS_PREFIX = "cosmos"
 
 export default new Vuex.Store({
@@ -82,6 +82,16 @@ export default new Vuex.Store({
       const base_req = { chain_id, from: creator };
       const req = { base_req, creator, ...body };
       const { data } = await axios.post(`${API}/${chain_id}/${type}`, req);
+      const { msg, fee, memo } = data.value;
+      return await state.client.signAndBroadcast(msg, fee, memo);
+    },
+    async entitySubmitFaucet({ state }, { type, body }) {
+      const { chain_id } = state;
+      const creator = state.client.senderAddress;
+			console.log(creator)
+      const base_req = { chain_id, from: creator };
+      const req = { base_req, creator, ...body };
+      const { data } = await axios.post(`${API}/faucet/${type}`, req);
       const { msg, fee, memo } = data.value;
       return await state.client.signAndBroadcast(msg, fee, memo);
     },

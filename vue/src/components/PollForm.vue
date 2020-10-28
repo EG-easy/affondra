@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <app-input placeholder="Title" v-model="title" />
-    <div v-for="option in options">
-      <app-input placeholder="Option" v-model="option.title" />
-    </div>
-    <app-button @click.native="add">Add option</app-button>
-    <app-button @click.native="submit">Create poll</app-button>
+<div>
+  <app-input placeholder="Title" v-model="title" />
+  <div v-for="(option, index) in options" :key="index">
+    <app-input placeholder="Option" v-model="option.title" />
   </div>
+  <app-button @click.native="add">Add option</app-button>
+  <app-button @click.native="submit">Create poll</app-button>
+</div>
 </template>
 
 <script>
@@ -19,7 +19,9 @@ export default {
   },
   methods: {
     add() {
-      this.options = [...this.options, { title: "" }];
+      this.options = [...this.options, {
+        title: ""
+      }];
     },
     async submit() {
       const payload = {
@@ -30,8 +32,8 @@ export default {
         }
       };
       await this.$store.dispatch("entitySubmit", payload);
-			await this.$store.dispatch("entityFetch", payload);
-			await this.$store.dispatch("accountUpdate");
+      await this.$store.dispatch("entityFetch", payload);
+      await this.$store.dispatch("accountUpdate");
     }
   }
 };
