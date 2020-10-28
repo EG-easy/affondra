@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 
 import _ from "lodash";
+import vuetify from './plugins/vuetify';
 Object.defineProperty(Vue.prototype, "$lodash", { value: _ });
 
 Vue.config.devtools = true;
@@ -19,5 +20,6 @@ ComponentContext.keys().forEach((componentFilePath) => {
 new Vue({
   router,
   store,
+  vuetify,
   render: (h) => h(App),
 }).$mount("#app");

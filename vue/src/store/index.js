@@ -7,7 +7,7 @@ import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cos
 
 Vue.use(Vuex);
 
-const API = "http://localhost:1317";
+const API = "http://192.168.1.160:1317";
 const ADDRESS_PREFIX = "cosmos"
 
 export default new Vuex.Store({
@@ -47,7 +47,7 @@ export default new Vuex.Store({
     },
     async accountSignIn({ commit }, { mnemonic }) {
 			console.log(mnemonic);
-      const tmp = async function() {
+      return new Promise(async (resolve, reject) => {
         const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
         const [{ address }] = await wallet.getAccounts();
         const url = `${API}/auth/accounts/${address}`;
@@ -57,11 +57,11 @@ export default new Vuex.Store({
           const client = new SigningCosmosClient(API, address, wallet);
           commit("accountUpdate", { account });
           commit("clientUpdate", { client });
-          return account;
+          resolve(account);
+        } else {
+          reject("Account doesn't exist.");
         }
-        throw new Error("Account doesn't exist.");
-      };
-      return Promise.resolve(tmp);
+      });
     },
     async entityFetch({ state, commit }, { type }) {
       const { chain_id } = state;
@@ -82,6 +82,16 @@ export default new Vuex.Store({
       const base_req = { chain_id, from: creator };
       const req = { base_req, creator, ...body };
       const { data } = await axios.post(`${API}/${chain_id}/${type}`, req);
+      const { msg, fee, memo } = data.value;
+      return await state.client.signAndBroadcast(msg, fee, memo);
+    },
+    async entitySubmitFaucet({ state }, { type, body }) {
+      const { chain_id } = state;
+      const creator = state.client.senderAddress;
+			console.log(creator)
+      const base_req = { chain_id, from: creator };
+      const req = { base_req, creator, ...body };
+      const { data } = await axios.post(`${API}/faucet/${type}`, req);
       const { msg, fee, memo } = data.value;
       return await state.client.signAndBroadcast(msg, fee, memo);
     },
