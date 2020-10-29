@@ -28,6 +28,9 @@
               History
             </a>
             <div class="navbar-item">
+              <ShowWalletBalance />
+            </div>
+            <div class="navbar-item">
               <button class="button is-rounded">
                 <span class="icon">
                   <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -131,12 +134,14 @@ $fullhd-enabled: false;
 
 <script>
 import LoginModal from '@/components/LoginModal.vue'
+import ShowWalletBalance from '@/components/ShowWalletBalance.vue'
 import ListingModal from '@/components/ListingModal.vue'
 
 export default {
   components: {
     LoginModal,
     ListingModal,
+    ShowWalletBalance,
   },
   created() {
     this.$store.dispatch("init");
