@@ -4,6 +4,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+// x/affondra errors
 var (
 	ErrInvalidAffiliatePrice = sdkerrors.Register(ModuleName, 1, "[affondra] Affiliate should be less than Price")
 	ErrAlreadyOnSale         = sdkerrors.Register(ModuleName, 2, "[affondra] The NFT is already on Sale")

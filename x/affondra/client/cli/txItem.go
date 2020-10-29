@@ -14,6 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 )
 
+//GetCmdBuyItem creates new item
 func GetCmdCreateItem(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "create-item [denom] [nftId] [price] [affiliate] [inSale]",
@@ -39,6 +40,7 @@ func GetCmdCreateItem(cdc *codec.Codec) *cobra.Command {
 	}
 }
 
+// GetCmdSetItem sets item info
 func GetCmdSetItem(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "set-item [id]  [denom] [nftId] [price] [affiliate] [inSale]",
@@ -65,6 +67,7 @@ func GetCmdSetItem(cdc *codec.Codec) *cobra.Command {
 	}
 }
 
+// GetCmdDeleteItem deletes item
 func GetCmdDeleteItem(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "delete-item [id]",
@@ -86,6 +89,7 @@ func GetCmdDeleteItem(cdc *codec.Codec) *cobra.Command {
 	}
 }
 
+// GetCmdBuyItem buys item
 func GetCmdBuyItem(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "buy-item [id] [introduced_by]",

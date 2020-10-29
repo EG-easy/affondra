@@ -56,6 +56,7 @@ func (k Keeper) GetItem(ctx sdk.Context, key string) (types.Item, error) {
 	return item, nil
 }
 
+// BuyItem create transactions
 func (k Keeper) BuyItem(ctx sdk.Context, key string, receiver sdk.AccAddress) (err error) {
 	item, err := k.GetItem(ctx, key)
 	if err != nil {
@@ -114,7 +115,7 @@ func getItem(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError err
 	return res, nil
 }
 
-// Get creator of the item
+// GetItemOwner returns creator of the item
 func (k Keeper) GetItemOwner(ctx sdk.Context, key string) sdk.AccAddress {
 	item, err := k.GetItem(ctx, key)
 	if err != nil {

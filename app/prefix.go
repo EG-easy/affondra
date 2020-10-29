@@ -4,10 +4,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+// Set Account Prefix
 const (
-	AccountAddressPrefix   = "cosmos"
+	AccountAddressPrefix = "cosmos"
 )
 
+// Set Address Prefixs
 var (
 	AccountPubKeyPrefix    = AccountAddressPrefix + "pub"
 	ValidatorAddressPrefix = AccountAddressPrefix + "valoper"
@@ -16,6 +18,7 @@ var (
 	ConsNodePubKeyPrefix   = AccountAddressPrefix + "valconspub"
 )
 
+// SetConfig define address format
 func SetConfig() {
 	config := sdk.GetConfig()
 	config.SetBech32PrefixForAccount(AccountAddressPrefix, AccountPubKeyPrefix)
