@@ -1,6 +1,7 @@
 <template>
 <section class="hero is-primary">
   <LoginModal v-if="isShowLoginModal" @close="isShowLoginModal = false" />
+  <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false" />
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
@@ -130,10 +131,12 @@ $fullhd-enabled: false;
 
 <script>
 import LoginModal from '@/components/LoginModal.vue'
+import ListingModal from '@/components/ListingModal.vue'
 
 export default {
   components: {
     LoginModal,
+    ListingModal,
   },
   created() {
     this.$store.dispatch("init");
@@ -141,6 +144,7 @@ export default {
   data() {
     return {
       isShowLoginModal: false,
+      isShowListingModal: true,
     }
   },
   methods: {
