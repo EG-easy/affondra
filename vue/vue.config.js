@@ -1,3 +1,5 @@
+// const path = require('path');
+
 module.exports = {
   devServer: {
     disableHostCheck: true,
@@ -5,5 +7,20 @@ module.exports = {
   },
   "transpileDependencies": [
     "vuetify"
-  ]
+  ],
+  // configureWebpack: {
+  //   module:{
+  //     rules:[
+  //       {
+  //         test: /npm\.js$/,
+  //         loader: 'string-replace-loader',
+  //         include: path.resolve('node_modules/firebaseui/dist'),
+  //         query: {
+  //           search: 'require(\'firebase/app\');',
+  //           replace: 'require(\'firebase/app\').default;',
+  //         },
+  //       },
+  //     ]
+  //   }
+  // }
 }

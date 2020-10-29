@@ -16,10 +16,12 @@
     "bulma": "^0.9.1",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
+    "firebase": "^8.0.0",
     "npm": "^6.14.8",
     "roboto-fontface": "*",
     "store": "^2.0.12",
     "vue": "^2.6.11",
+    "vue-image-upload-resize": "^2.3.0",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11",
     "vuex": "^3.4.0"
