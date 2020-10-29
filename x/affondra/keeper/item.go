@@ -128,3 +128,17 @@ func (k Keeper) ItemExists(ctx sdk.Context, key string) bool {
 	store := ctx.KVStore(k.storeKey)
 	return store.Has([]byte(types.ItemPrefix + key))
 }
+
+// IterateItems iterates over collections and performs a function
+func (k Keeper) IterateItems(ctx sdk.Context, handler func(item types.Item) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, []byte(types.ItemPrefix))
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var item types.Item
+		k.cdc.MustUnmarshalBinaryLengthPrefixed(iterator.Value(), &item)
+		if handler(item) {
+			break
+		}
+	}
+}
