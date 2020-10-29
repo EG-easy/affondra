@@ -4,8 +4,10 @@
     <div class="modal-wrapper" @click.self="$emit('close')">
       <div class="modal-container is-flex is-flex-direction-column has-text-black">
         <div class="has-text-left my-2">
-          <!--<span class="tag is-primary">Enter Mnemonic</span>-->
           <h1 class="title has-text-black">Listing</h1>
+        </div>
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">1. Pick image</h4>
         </div>
         <div class="box has-text-centered">
           <ImageUploader :preview="true" :className="['fileinput', { 'fileinput--loaded': hasImage }]" capture="environment" :debug="1" :maxWidth="512" :maxHeight="512" :quality="0.8" :autoRotate="true" outputFormat="verbose" @input="setImage">
@@ -21,19 +23,89 @@
             </label>
           </ImageUploader>
         </div>
+        <!--<input class="is-flex-grow-1 input is-rounded my-2" type="text" placeholder="Title">-->
+        <!--<input class="is-flex-grow-1 input is-rounded my-2" type="number" placeholder="price">-->
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">2. Set title</h4>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input v-model="title" class="input" type="text" placeholder="Title">
+            <span class="icon is-small is-left">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+              </svg>
+            </span>
+            <span class="icon is-small is-right">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+              </svg>
+            </span>
+          </p>
+        </div>
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">3. Set Price</h4>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input v-model="price" class="input" type="number" placeholder="Price">
+            <span class="icon is-small is-left">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M5,6H23V18H5V6M14,9A3,3 0 0,1 17,12A3,3 0 0,1 14,15A3,3 0 0,1 11,12A3,3 0 0,1 14,9M9,8A2,2 0 0,1 7,10V14A2,2 0 0,1 9,16H19A2,2 0 0,1 21,14V10A2,2 0 0,1 19,8H9M1,10H3V20H19V22H1V10Z" />
+              </svg>
+            </span>
+            <span class="icon is-small is-right">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+              </svg>
+            </span>
+          </p>
+        </div>
+        <div class="field has-addons">
+          <p class="control">
+            <button class="button is-success is-small" @click="setPrice(price+10000)">
+              +10000
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-success is-small" @click="setPrice(price+1000)">
+              +1000
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-success is-small" @click="setPrice(price+100)">
+              +100
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-danger is-small" @click="setPrice(price-100)">
+              -100
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-danger is-small" @click="setPrice(price-1000)">
+              -1000
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-danger is-small" @click="setPrice(price-10000)">
+              -10000
+            </button>
+          </p>
+        </div>
         <div>{{ errorMessage }}</div>
         <div class="is-flex is-flex-direction-row my-4">
-          <button :disabled="isLoading" class="button is-primary is-light" @click="strMnemonic = ''">
+          <!--<button :disabled="isLoading" class="button is-primary is-light" @click="onClearClicked">
             <span>Clear</span>
           </button>
-          <div :style="{'width':'10px'}"></div>
+          <div :style="{'width':'10px'}"></div>-->
           <button :disabled="isLoading" class="is-flex-grow-1 button is-primary" @click="onListingClicked">
             <span class=" icon">
               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
               </svg>
             </span>
-            <span>Login</span>
+            <span>Listing</span>
           </button>
         </div>
         <progress :style="{'visibility':isLoading ? 'visible' : 'hidden'}" class="progress is-small is-primary" max="100"></progress>
@@ -50,20 +122,20 @@ export default {
   components: {
     ImageUploader,
   },
-  props: {
-    title: String,
-    isVisible: Boolean,
-    price: Number,
-  },
   data() {
     return {
       isLoading: false,
       hasImage: false,
       image: null,
       errorMessage: "",
+      price: 100,
+      title: "",
     }
   },
   methods: {
+    setPrice: function (newV) {
+      this.price = newV >= 100 ? newV : 100;
+    },
     getRandomStr: function (len) {
       return Array(len).fill(0).map(() => Math.floor(Math.random() * Math.floor(62))).map(v => '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'.substr(v, 1)).join('')
     },
@@ -78,8 +150,11 @@ export default {
       ref.putString(this.image.dataUrl, 'data_url').then(function () {
         console.log('Uploaded a blob or file!');
       });
-
     },
+    onClearClicked: function () {
+      this.title = "";
+      this.price = 100;
+    }
   },
 }
 </script>
