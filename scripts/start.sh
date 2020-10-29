@@ -15,9 +15,9 @@ affondracli keys add user1
 affondracli keys add user2
 affondracli keys add faucet
 
-affondrad add-genesis-account $(affondracli keys show user1 -a) 1000token,100000000stake
-affondrad add-genesis-account $(affondracli keys show user2 -a) 1000token,100000000stake
-affondrad add-genesis-account $(affondracli keys show faucet -a) 100000000stake
+affondrad add-genesis-account $(affondracli keys show user1 -a) 1000affondollar,100000000stake
+affondrad add-genesis-account $(affondracli keys show user2 -a) 1000affondollar,100000000stake
+affondrad add-genesis-account $(affondracli keys show faucet -a) 10000000000affondollar,10000000000stake
 
 affondrad gentx --name user1 --keyring-backend test
 
