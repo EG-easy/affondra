@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     getRandomStr: function (len) {
-      return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(len)))).substring(0, len)
+      return Array(len).fill(0).map(() => Math.floor(Math.random() * Math.floor(62))).map(v => '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'.substr(v, 1)).join('')
     },
     setImage: function (output) {
       this.hasImage = true;
