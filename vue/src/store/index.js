@@ -8,7 +8,12 @@ import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cos
 Vue.use(Vuex);
 
 const API = "http://192.168.1.160:1317";
+// const API = "http://affondra.com:1317";
 const ADDRESS_PREFIX = "cosmos"
+
+axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 export default new Vuex.Store({
   state: {
@@ -46,22 +51,20 @@ export default new Vuex.Store({
       commit("chainIdSet", { chain_id: node_info.network });
     },
     async accountSignIn({ commit }, { mnemonic }) {
-			console.log(mnemonic);
-      return new Promise(async (resolve, reject) => {
-        const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
-        const [{ address }] = await wallet.getAccounts();
-        const url = `${API}/auth/accounts/${address}`;
-        const acc = (await axios.get(url)).data;
-        if (acc.result.value.address === address) {
-          const account = acc.result.value;
-          const client = new SigningCosmosClient(API, address, wallet);
-          commit("accountUpdate", { account });
-          commit("clientUpdate", { client });
-          resolve(account);
-        } else {
-          reject("Account doesn't exist.");
-        }
-      });
+      const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
+      const [{ address }] = await wallet.getAccounts();
+      const url = `${API}/auth/accounts/${address}`;
+      const acc = (await axios.get(url)).data;
+      if (acc.result.value.address === address) {
+        const account = acc.result.value;
+        const client = new SigningCosmosClient(API, address, wallet);
+        commit("accountUpdate", { account });
+        commit("clientUpdate", { client });
+        return account
+      } else {
+        console.error("Account doesn't exist.");
+        return null;
+      }
     },
     async entityFetch({ state, commit }, { type }) {
       const { chain_id } = state;

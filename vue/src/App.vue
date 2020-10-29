@@ -1,5 +1,6 @@
 <template>
 <section class="hero is-primary">
+  <LoginModal v-if="isShowLoginModal" @close="isShowLoginModal = false" />
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
@@ -36,7 +37,7 @@
               </button>
             </div>
             <div class="navbar-item">
-              <button class="button is-rounded">
+              <button class="button is-rounded" @click="isShowLoginModal = true">
                 <span class="icon">
                   <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
@@ -128,9 +129,19 @@ $fullhd-enabled: false;
 </style>
 
 <script>
+import LoginModal from '@/components/LoginModal.vue'
+
 export default {
+  components: {
+    LoginModal,
+  },
   created() {
     this.$store.dispatch("init");
+  },
+  data() {
+    return {
+      isShowLoginModal: false,
+    }
   },
   methods: {
     async submit() {
