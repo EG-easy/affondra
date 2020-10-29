@@ -6,9 +6,9 @@ import (
 )
 
 type MsgBuyItem struct {
-	ID           string
+	ID           string         `json:"id" yaml:"id"`
 	Receiver     sdk.AccAddress `json:"receiver" yaml:"receiver"`
-	IntroducedBy sdk.AccAddress `json:"introducedBy" yaml:"introducedBy"`
+	IntroducedBy sdk.AccAddress `json:"introduced_by" yaml:"introduced_by"`
 }
 
 func NewMsgBuyItem(id string, receiver sdk.AccAddress, introducedBy sdk.AccAddress) MsgBuyItem {
