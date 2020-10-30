@@ -18,15 +18,11 @@
         </div>
         <div id="navbarMenuHeroA" class="navbar-menu">
           <div class="navbar-end">
-            <a class="navbar-item">
-              Buy
-            </a>
-            <a class="navbar-item">
-              Listing
-            </a>
-            <a class="navbar-item">
-              History
-            </a>
+            <div v-if="isLoggedIn" class="navbar-item">
+              <span class="tag is-primary is-light">
+                Your address: {{address}}
+              </span>
+            </div>
             <div v-if="isLoggedIn" class="navbar-item">
               <ShowWalletBalance />
             </div>
@@ -169,7 +165,12 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn
-    }
+    },
+    address() {
+      const { client } = this.$store.state;
+      const address = client && client.senderAddress;
+      return address;
+    },
   },
   methods: {
     async submit() {
