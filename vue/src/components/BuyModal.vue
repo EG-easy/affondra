@@ -60,13 +60,16 @@ export default {
     isVisible: Boolean,
     price: String,
     denom: String,
-    imageUrl:String,
+    imageUrl: String,
     description: String,
+    id: String,
   },
   data() {
     return {
       password: '',
       isLoading: false,
+      strLeaderMessage: 'Processing...',
+      errorMessage: '',
     }
   },
   computed: {
@@ -75,6 +78,11 @@ export default {
         typeof this.password === 'string' && this.password.length > 0
       );
     },
+    address() {
+      const { client } = this.$store.state;
+      const address = client && client.senderAddress;
+      return address;
+    },
   },
   methods: {
     getRandomStr: function (len) {
@@ -82,29 +90,24 @@ export default {
     },
     async onBuyClicked() {
       this.isLoading = true;
-      this.strLeaderMessage = 'Uploading image...'
+      this.strLeaderMessage = 'Sending purchase transaction...'
 
-      const resSendTxMintNft = await this.$store.dispatch("sendTxMintNft", {
-        address: this.address,
-        denom: this.categorySelected,
-        nftId: '',
-        // id: '2iZaPwXbfdiCXRbuzmQLPVRZ5Z88tv2z',
-        tokenURI: JSON.stringify({
-          name: this.title,
-          imgurl: '',
-        }),
+      const resSendTxBuyItem = await this.$store.dispatch("sendTxBuyItem", {
+        buyerAddress: this.address,
+        id: this.id,
+        addressIntroducedBy: 'cosmos1ffu8y09f8snw0730m4e4p668j88ds42jlpjenv',
       }).catch((e) => {
         console.error(e)
         this.errorMessage = e;
-        this.strLeaderMessage = 'Error has occured. Listing was cancelled.';
+        this.strLeaderMessage = 'Error has occured. Purchase was cancelled.';
         setTimeout(() => {
           this.isLoading = false;
           this.$emit('close');
         }, 3000);
-        throw new Error('LISTING_FAILED');
+        throw new Error('PURCHASE_FAILED');
       })
 
-      console.log('onListingClicked>resSendTxMintNft', resSendTxMintNft);
+      console.log('onListingClicked>resSendTxBuyItem', resSendTxBuyItem);
 
       this.strLeaderMessage = 'Done';
       setTimeout(() => {

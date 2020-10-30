@@ -235,6 +235,40 @@ export default new Vuex.Store({
       return logTx
 
     },
+    async sendTxBuyItem({ state }, payload) { // eslint-disable-line no-unused-vars
+
+      const txCreateItemAxiosConfig = {
+        baseURL: API,
+        method : 'POST',
+        url    : `/affondra/item/buy`,
+        data   : {
+          "base_req": {
+            "from": `${payload.buyerAddress}`,
+            "chain_id": "affondra"
+          },
+          "receiver": `${payload.buyerAddress}`,
+          "ID": `${payload.id}`,
+          "introducedBy": `${payload.addressIntroducedBy}`,
+        },
+      };
+
+      console.log('sendTxCreateItem>txAxiosConfig:', txCreateItemAxiosConfig);
+
+      const { data: rawTx } = await axios(txCreateItemAxiosConfig);
+      console.log('sendTxCreateItem>rawTx:',rawTx)
+      if (typeof rawTx !== 'object') throw new Error('INVALID_BODY');
+      if (rawTx.type !== 'cosmos-sdk/StdTx') throw new Error('INVALID_TXN_TYPE');
+      if (typeof rawTx.value !== 'object') throw new Error('INVALID_TXN_VALUE');
+
+      const { msg, fee, memo } = rawTx.value;
+      console.log('{ msg, fee, memo }', { msg, fee, memo })
+      const logTx = await state.client.signAndBroadcast(msg, fee, memo);
+      console.log('sendTxCreateItem>logTx:', logTx);
+      if ('code' in logTx) throw new Error(`TXN_FAILED:${logTx.rawLog}`)
+
+      return logTx
+
+    },
     async entityFetch({ state, commit }, { type }) {
       const { chain_id } = state;
       const url = `${API}/${chain_id}/${type}`;
