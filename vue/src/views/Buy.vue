@@ -44,39 +44,41 @@ div.af-items {
   padding: 10px;
 }
 
-#listing-button{
+#listing-button {
   cursor: pointer;
   position: fixed;
   bottom: 5vh;
   right: 5vh;
-	width: 80px;
-	height: 80px;
-	border-radius: 40px;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
   background-color: rgb(13, 41, 163);
-  text-align:center;
+  text-align: center;
   line-height: 74px;
   font-size: 60px;
   color: #fff;
   box-shadow: 0 0 25px 0 rgba(256, 256, 256, 1);
   transition: all 0.2s;
-  transform:scale(1,1);
+  transform: scale(1, 1);
   user-select: none;
 }
+
 #listing-button:hover {
   background-color: rgb(39, 61, 160);
-  transform:scale(1.1,1.1);
+  transform: scale(1.1, 1.1);
   /*width: 300px;*/
   /*margin-right: 10px;*/
 }
+
 #listing-button[disabled] {
   cursor: no-drop;
   background-color: rgb(209, 209, 209);
   color: rgb(179, 179, 179);
 }
-#listing-button[disabled]:hover {
-  transform:scale(1,1);
-}
 
+#listing-button[disabled]:hover {
+  transform: scale(1, 1);
+}
 </style>
 
 <script>
@@ -93,7 +95,7 @@ export default {
       return this.items.filter((v) => this.serachString.trim() === '' || v.title.indexOf(this.serachString.trim()) > -1);
     }
   },
-  mounted: function(){
+  mounted: function () {
     this.refreshItems();
   },
   data() {
@@ -114,7 +116,9 @@ export default {
     },
     refreshItems: async function () {
       const storageRef = this.$_firebaseStorage.ref();
-      const { result } = await this.$store.dispatch("getItemList")
+      const {
+        result
+      } = await this.$store.dispatch("getItemList")
       this.items = [];
       result.forEach(async (v) => {
         const tokenUri = JSON.parse(v.token_uri);
