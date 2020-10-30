@@ -120,6 +120,8 @@ export default {
         const tokenUri = JSON.parse(v.token_uri);
         this.items.push({
           title: tokenUri.name,
+          denom: v.denom,
+          description: v.description,
           imageUrl: await storageRef.child(tokenUri.imgurl).getDownloadURL(),
           price: `${v.price.amount} ${v.price.denom}`,
           visible: true,
