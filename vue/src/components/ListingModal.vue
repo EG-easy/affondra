@@ -27,7 +27,28 @@
         <!--<input class="is-flex-grow-1 input is-rounded my-2" type="text" placeholder="Title">-->
         <!--<input class="is-flex-grow-1 input is-rounded my-2" type="number" placeholder="price">-->
         <div class="has-text-left my-2">
-          <h4 class="subtitle is-4 has-text-black">2. Set title</h4>
+          <h4 class="subtitle is-4 has-text-black">2. Set category (denom)</h4>
+        </div>
+        <div>
+          <div class="control has-icons-left">
+            <div class="select is-flex-grow-1">
+              <select v-model="categorySelected">
+                <option>Default category</option>
+                <option>Game Items</option>
+                <option>Characters</option>
+                <option>Vegetables</option>
+                <option>Goods</option>
+              </select>
+            </div>
+            <span class="icon is-left">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M11,13.5V21.5H3V13.5H11M12,2L17.5,11H6.5L12,2M17.5,13C20,13 22,15 22,17.5C22,20 20,22 17.5,22C15,22 13,20 13,17.5C13,15 15,13 17.5,13Z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">3. Set title</h4>
         </div>
         <div class="field">
           <p class="control has-icons-left has-icons-right">
@@ -45,7 +66,7 @@
           </p>
         </div>
         <div class="has-text-left my-2">
-          <h4 class="subtitle is-4 has-text-black">3. Set Price</h4>
+          <h4 class="subtitle is-4 has-text-black">4. Set Price</h4>
         </div>
         <div class="field">
           <p class="control has-icons-left has-icons-right">
@@ -95,7 +116,7 @@
           </p>
         </div>
         <div class="has-text-left my-2">
-          <h4 class="subtitle is-4 has-text-black">4. Set affiliate reward rate</h4>
+          <h4 class="subtitle is-4 has-text-black">5. Set affiliate reward rate</h4>
         </div>
         <div class="my-6">
           <VueSlider v-model="affiliateRewardRate" :min="0" :max="100" :interval="10" :marks="{'0':'0%','20':'20%','40':'40%','60':'60%','80':'80%','100':'100%'}">
@@ -148,6 +169,7 @@ export default {
   },
   data() {
     return {
+      categorySelected: "Default category",
       isLoading: false,
       strLeaderMessage: 'Processing...',
       hasImage: false,
@@ -197,7 +219,7 @@ export default {
 
       const resSendTxMintNft = await this.$store.dispatch("sendTxMintNft", {
         address: this.address,
-        denom: 'default',
+        denom: this.categorySelected,
         nftId: nftId,
         // id: '2iZaPwXbfdiCXRbuzmQLPVRZ5Z88tv2z',
         tokenURI: JSON.stringify({
@@ -221,7 +243,7 @@ export default {
 
       await this.$store.dispatch("sendTxCreateItem", {
         address: this.address,
-        denom: 'default',
+        denom: this.categorySelected,
         nftId: nftId,
         price: `${this.price}affondollar`,
         affiliate: `${Math.floor(this.price * this.affiliateRewardRate / 100)}affondollar`,
