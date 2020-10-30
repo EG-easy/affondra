@@ -1,10 +1,10 @@
 <template>
-<section class="hero is-primary">
+<section class="hero is-primary" :style="{'min-height':'100vh'}">
   <LoginModal v-if="isShowLoginModal" @close="isShowLoginModal = false" />
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
-  <v-snackbar v-model="isShowSnackbar" :centered="false" color="#003C88" :timeout="2000"> <div class="has-text-centered is-size-5">Logout successfully</div> </v-snackbar>
+      <v-snackbar v-model="isShowSnackbar" :centered="false" color="#003C88" :timeout="2000"> <div class="has-text-centered is-size-5">Logout successfully</div> </v-snackbar>
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item">
@@ -68,7 +68,7 @@
 
   <!-- Hero content: will be in the middle -->
   <div class="hero-body">
-    <div class="container has-background-white has-text-black" :style="{height:'90vh'}">
+    <div class="container has-background-white has-text-black">
       <router-view />
     </div>
   </div>
@@ -139,6 +139,10 @@ $fullhd-enabled: false;
   margin: 0 auto;
   max-width: 800px;
   padding: 1rem;
+}
+
+section.hero.is-primary{
+  overflow-y: none;
 }
 </style>
 
