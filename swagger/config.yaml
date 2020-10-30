@@ -3,7 +3,7 @@ info:
   version: '1.0'
   title: NFT
 servers:
-  - url: http://192.168.1.160:1317
+  - url: http://lcd.affondra.com:1317
 tags:
   - name: NFT
   - name: Affondra
@@ -30,7 +30,7 @@ paths:
                     items:
                       type: "string"
                       example: ["denom1", "denom2"]
-                  
+
   /nft/owner/{address}:
     get:
       summary: Get list of NFTs a specified owner have.
@@ -148,7 +148,7 @@ paths:
                 type: object
   /nfts/mint:
     post:
-      summary: ---
+      summary: mint new NFT
       tags:
         - NFT
       operationId: /nfts/mint
@@ -165,7 +165,7 @@ paths:
                 type: object
   /nfts/transfer:
     post:
-      summary: ---
+      summary: transfer NFT
       tags:
         - NFT
       operationId: /nfts/transfer
@@ -216,7 +216,7 @@ paths:
                 type: object
   /nfts/collection/{denom}/nft/{nftId}/metadata:
     put:
-      summary: ---
+      summary: Update NFT metadata
       tags:
         - NFT
       operationId: /nfts/collection/crypto-kitties/nft/aaa/metadata
@@ -269,7 +269,7 @@ paths:
                 type: object
   /nfts/collection/{denom}/nft/{nftId}/burn:
     put:
-      summary: ---
+      summary: Burn the NFT
       tags:
         - NFT
       operationId: Burn (delete) a specify NFT.
@@ -325,6 +325,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Item'
+    post:
+      summary: Sell item.
+      tags:
+      - Affondra
+      operationId: /affondra/item
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/createItemRequest'
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    put:
+      summary: Update item info.
+      tags:
+      - Affondra
+      operationId: /affondra/item
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/setItemRequest'
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    delete:
+      summary: Delete item info.
+      tags:
+      - Affondra
+      operationId: /affondra/item
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/deleteItemRequest'
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+
 
   /affondra/item/{id}:
     get:
@@ -392,6 +438,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
 
+
   /faucet/mint:
     post:
       summary: Get faucet
@@ -405,6 +452,23 @@ paths:
             application/json:
               schema:
                 type: "object"
+
+  /affondra/buy:
+    post:
+      summary: Buy a item
+      tags:
+      - Affondra
+      operationId: /affondra/item/buy
+      parameters: []
+      requestBody:
+        $ref: '#/components/requestBodies/buyItemRequest'
+      responses:
+        200:
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
 
 components:
   parameters:
@@ -465,65 +529,158 @@ components:
             denom: MyToken
             id: aaa
             tokenURI: http://localhost:8080
+    createItemRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/components/schemas/BaseReq'
+              creator:
+                type: string
+              denom:
+                type: string
+              id:
+                type: string
+              price:
+                type: string
+              affiliate:
+                type: string
+              inSale:
+                type: string
+              description:
+                type: string
+            required:
+            - base_req
+            - creator
+            - denom
+            - id
+            - price
+            - affiliate
+            - inSale
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+            creator: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+            denom: MyToken
+            id: aaa
+            price: 100affondollar
+            affiliate: 10affondollar
+            inSale: true
+            description: This item is awesome!
+    setItemRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/components/schemas/BaseReq'
+                id:
+                type: string
+              denom:
+                type: string
+              nftId:
+                type: string
+              price:
+                type: string
+              affiliate:
+                type: string
+              inSale:
+                type: string
+              description:
+                type: string
+            required:
+            - base_req
+            - id
+            - creator
+            - denom
+            - nftId
+            - price
+            - affiliate
+            - inSale
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+            creator: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+            id:
+            denom: MyToken
+            nftId: 3af286d7-f61b-4525-b3b2-53e62c57babb
+            price: 100affondollar
+            affiliate: 10affondollar
+            inSale: true
+            description: This item is awesome!
+    deleteItemRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/components/schemas/BaseReq'
+                id:
+                type: string
+              creator:
+                type: string
+            required:
+            - base_req
+            - id
+            - creator
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+            creator: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+            id: aaa
+    buyItemRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              base_req:
+                $ref: '#/components/schemas/BaseReq'
+                id:
+                type: string
+              receiiver:
+                type: string
+              introduced_by:
+                type: string
+            required:
+            - base_req
+            - id
+            - receiver
+          example:
+            base_req:
+              from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+              memo: "Sent from Postman \U0001F680"
+              chain_id: voter
+            receiver: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
+            id: aaa
   schemas:
     BaseReq:
       type: object
       properties:
         from:
           type: string
-        memo:
-          type: string
         chain_id:
           type: string
-        account_number:
-          type: string
-        sequence:
-          type: string
-        gas:
-          type: string
-        gas_adjustment:
-          type: string
-        fees:
-          type: array
-          items:
-            $ref: '#/components/schemas/Fee'
-        simulate:
-          type: boolean
       required:
       - from
-      - memo
       - chain_id
-      - account_number
-      - sequence
-      - gas
-      - gas_adjustment
-      - fees
-      - simulate
       example:
         from: cosmos1g9ahr6xhht5rmqven628nklxluzyv8z9jqjcmc
-        memo: "Sent from Postman \U0001F680"
-        chain_id: voter
-        account_number: 0
-        sequence: 1
-        gas: 200000
-        gas_adjustment: 1.2
-        fees:
-        - denom: token
-          amount: 50
-        simulate: false
-    Fee:
-      type: object
-      properties:
-        denom:
-          type: string
-        amount:
-          type: string
-      required:
-      - denom
-      - amount
-      example:
-        denom: token
-        amount: 50
+        chain_id: affondra
     Coin:
       type: object
       properties:
@@ -537,7 +694,7 @@ components:
     Item:
       type: object
       properties:
-        creator: 
+        creator:
           type: string
         id:
           type: string
@@ -551,7 +708,9 @@ components:
           $ref: '#/components/schemas/Coin'
         receiver:
           type: string
-        insale: 
+        description:
+          type: string
+        insale:
           type: boolean
       example:
         creator: cosmos10dhsus4sl07vu0mltw74jmseh64ayxg63mqhm9
@@ -560,8 +719,6 @@ components:
         nftId: aaa
         price: {denom: token, amount: 1000}
         affiliate: {denom: token, amount: 1000}
-        receiver: 
+        receiver:
+        description: This item is awesome!
         insale: true
-
-      
-
