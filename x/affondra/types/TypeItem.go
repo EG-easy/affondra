@@ -9,6 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+// Item defines item struct
 type Item struct {
 	Creator     sdk.AccAddress `json:"creator" yaml:"creator"`
 	ID          string         `json:"id" yaml:"id"`
@@ -22,6 +23,7 @@ type Item struct {
 	InSale      bool           `json:"inSale" yaml:"inSale"`
 }
 
+// NewItem is a constructor function for Item
 func NewItem(id string, owner sdk.AccAddress, denom string, nftId string, tokenURI string, price sdk.Coin, affiliate sdk.Coin, description string, inSale bool) Item {
 	return Item{
 		Creator:     owner,
@@ -37,61 +39,77 @@ func NewItem(id string, owner sdk.AccAddress, denom string, nftId string, tokenU
 	}
 }
 
+// GetID returns item id
 func (item Item) GetID() string {
 	return item.ID
 }
 
+// GetOwner returns creator address
 func (item Item) GetOwner() sdk.AccAddress {
 	return item.Creator
 }
 
+// GetDenom returns item denom
 func (item Item) GetDenom() string {
 	return item.Denom
 }
 
+// GetNftid returns item nft id
 func (item Item) GetNftid() string {
 	return item.NftId
 }
 
+// GetTokenURI returns item token uri
 func (item Item) GetTokenURI() string {
 	return item.TokenURI
 }
 
+// GetPrice returns item price
 func (item Item) GetPrice() sdk.Coin {
 	return item.Price
 }
 
+// GetAffiliate returns affiliate reward
 func (item Item) GetAffiliate() sdk.Coin {
 	return item.Affiliate
 }
 
+// GetReceiver returns receiver address
 func (item Item) GetReceiver() sdk.AccAddress {
 	return item.Receiver
 }
 
+// GetDescription returns item description
 func (item Item) GetDescription() string {
 	return item.Description
 }
 
+// GetInSale returns item is in sale or not
 func (item Item) GetInSale() bool {
 	return item.InSale
 }
+
+// SetOwner set item owner address
 func (item *Item) SetOwner(addr sdk.AccAddress) {
 	item.Creator = addr
 }
 
+// SetTokenURI set item URI
 func (item *Item) SetTokenURI(tokenURI string) {
 	item.TokenURI = tokenURI
 }
 
+// SetReceiver set item receiver
 func (item *Item) SetReceiver(addr sdk.AccAddress) {
 	item.Receiver = addr
 }
 
+// SetDescription set item description
 func (item *Item) SetDescription(desc string) {
 	item.Description = desc
 }
 
+// ChangeInSaleStatus set item sale status
 func (item *Item) ChangeInSaleStatus() {
 	item.InSale = !item.InSale
 }
@@ -122,6 +140,7 @@ InSale:%v`,
 
 type Items []Item
 
+// NewItems is a constructor function for Items
 func NewItems(items ...Item) Items {
 	if len(items) == 0 {
 		return Items{}

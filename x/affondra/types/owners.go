@@ -7,13 +7,15 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-type SortedStringArray []string
+// type SortedStringArray []string
 
+// Owner defines key(address) -> value(items) for query
 type Owner struct {
 	Address sdk.AccAddress `json:"address" yaml:"address"`
 	Items   Items          `json:"items" yaml:"items"`
 }
 
+// NewOwner is a constructor function for Owner
 func NewOwner(owner sdk.AccAddress, items Items) Owner {
 	return Owner{
 		Address: owner,
@@ -76,6 +78,7 @@ func (owner Owner) DeleteItem(item Item) (Owner, error) {
 	return owner, nil
 }
 
+// Supply return total item
 func (owner Owner) Supply() int {
 	return len(owner.Items)
 }

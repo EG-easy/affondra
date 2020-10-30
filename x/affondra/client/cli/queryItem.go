@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// GetCmdListItem lists all item
 func GetCmdListItem(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "list-item",
@@ -27,6 +28,7 @@ func GetCmdListItem(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	}
 }
 
+// GetCmdGetItem returns specified item
 func GetCmdGetItem(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "id [key]",
@@ -50,6 +52,7 @@ func GetCmdGetItem(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	}
 }
 
+// GetCmdGetItemByOwner returns items using owner address
 func GetCmdGetItemByOwner(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "addr [address]",
@@ -73,6 +76,7 @@ func GetCmdGetItemByOwner(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	}
 }
 
+// GetCmdGetItemByDenom returns items using denom
 func GetCmdGetItemByDenom(queryRoute string, cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "denom [denom]",

@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/params"
 )
 
-// Default parameter namespace
+// Default Parameters namespace
 const (
 	DefaultParamspace = ModuleName
 	// TODO: Define your default parameters
@@ -25,12 +25,12 @@ func ParamKeyTable() params.KeyTable {
 
 // Params - used for initializing default parameter for affondra at genesis
 type Params struct {
-	// TODO: Add your Paramaters to the Paramter struct
+	// TODO: Add your Parameter to the Paramter struct
 	// KeyParamName string `json:"key_param_name"`
 }
 
 // NewParams creates a new Params object
-func NewParams( /* TODO: Pass in the paramters*/ ) Params {
+func NewParams( /* TODO: Pass in the parameters*/ ) Params {
 	return Params{
 		// TODO: Create your Params Type
 	}
