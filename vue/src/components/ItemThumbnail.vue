@@ -1,5 +1,6 @@
 <template>
-<div class="item-thumbnail is-flex is-flex-direction-column box pa-0">
+<div class="item-thumbnail is-flex is-flex-direction-column box pa-0"
+  @click="$emit('click')">
   <figure class="image is-4by3">
     <img draggable="false" :src="imageUrl">
   </figure>
