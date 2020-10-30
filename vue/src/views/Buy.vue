@@ -1,6 +1,7 @@
 <template>
 <div class="container">
   <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false;refreshItems();" />
+  <BuyModal v-bind="items[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal = false;" />
   <div class="is-flex is-flex-direction-column">
     <div class="is-flex is-flex-direction-row">
       <label class="checkbox is-align-self-center">
@@ -22,7 +23,7 @@
     </div>
     <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-start">
       <div v-for="(item, index) in filterdItems" :key="index" class="af-items">
-        <ItemThumbnail v-bind="item" />
+        <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=true;" />
       </div>
       <div v-if="filterdItems.length < 1" class="has-text-centered" :style="{'flex-basis':'100%'}">
         <button class="button is-primary is-light" @click="clearFilter">
@@ -84,11 +85,13 @@ div.af-items {
 <script>
 import ItemThumbnail from '@/components/ItemThumbnail.vue'
 import ListingModal from '@/components/ListingModal.vue'
+import BuyModal from '@/components/BuyModal.vue'
 
 export default {
   components: {
     ItemThumbnail,
     ListingModal,
+    BuyModal,
   },
   computed: {
     filterdItems: function () {
@@ -97,9 +100,12 @@ export default {
   },
   mounted: function () {
     this.refreshItems();
+    console.log(this.items[this.indexSelectedItem]);
   },
   data() {
     return {
+      isShowBuyModal: false,
+      indexSelectedItem: 0,
       isShowListingModal: false,
       serachString: "",
       items: [{
@@ -107,6 +113,7 @@ export default {
         imageUrl: "https://bulma.io/images/placeholders/256x256.png",
         price: "100$",
         visible: true,
+        denom: 'example',
       }]
     }
   },
