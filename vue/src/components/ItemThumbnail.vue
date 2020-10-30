@@ -1,7 +1,7 @@
 <template>
 <div class="is-flex is-flex-direction-column">
   <figure class="image is-3by2">
-    <img src="https://bulma.io/images/placeholders/256x256.png">
+    <img :src="imageUrl">
   </figure>
   <div class="is-flex is-flex-direction-row">
     <div class="has-text-centered">{{title}}</div>
@@ -16,7 +16,8 @@ export default {
   props: {
     title: String,
     isVisible: Boolean,
-    price: Number,
+    price: String,
+    imageUrl:String
   },
 };
 </script>
