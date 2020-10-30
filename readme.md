@@ -20,7 +20,7 @@ Affondra is a blockchain application using [cosmos-sdk](https://github.com/cosmo
 :heavy_check_mark: faucet system  
 :heavy_check_mark: web wallet  
 
-Firstly, watch [Demo]()!
+Firstly, watch [Demo](https://affondra.web.app/)!
 ## API Endpoint (Swagger)
 You can refer to the api endpoint of Affondra module and NFT module.  
 View in [Swagger Hub](https://app.swaggerhub.com/apis/EG-easy/affondra/1.0).
