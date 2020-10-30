@@ -7,7 +7,7 @@ import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cos
 
 Vue.use(Vuex);
 
-const API = "http://lcd.affondra.com:8888";
+const API = "https://api.affondra.com";
 // const API = "http://affondra.com:1317";
 const ADDRESS_PREFIX = "cosmos"
 
@@ -72,6 +72,7 @@ export default new Vuex.Store({
       const client = new SigningCosmosClient(API, address, wallet);
       commit("accountUpdate", { account });
       commit("clientUpdate", { client });
+
       return account
 
       // if (acc.result.value.address === address) {
