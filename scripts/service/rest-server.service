@@ -1,0 +1,13 @@
+[Unit]
+Description=rest-server
+After=network.target
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home
+ExecStart=/home/ubuntu/go/bin/affondracli rest-server --laddr tcp://0.0.0.0:1317 --chain-id affondra --trust-node --unsafe-cors --indent
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=4096
+[Install]
+WantedBy=multi-user.target
