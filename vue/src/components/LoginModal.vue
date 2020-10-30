@@ -51,6 +51,9 @@ import axios from "axios";
 import { Secp256k1HdWallet, SigningCosmosClient } from "@cosmjs/launchpad";
 
 const API = "http://lcd.affondra.com:8888";
+const API_FIREBASE = 'https://asia-northeast1-affondra.cloudfunctions.net';
+axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'; 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 export default {
   props: {
@@ -94,12 +97,19 @@ export default {
       a.parentNode.removeChild(a); // delete the temporary "a" element
     },
     async onGenerateMnemonicClicked () {
+      axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'; 
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+      
       this.strLeaderMessage = 'Creating new mnemonic...';
       this.isLoading = true;
       await ( new Promise(resolve => { setTimeout(() => { resolve(0) }, 100)}) );
       const wallet = await Secp256k1HdWallet.generate(24).catch(e => {
         console.error(e);
-        throw new Error (e);
+        this.strLeaderMessage = 'Failed!!';
+        this.sleep(1000).then(() => {
+          this.isLoading = false;
+          throw new Error (e);
+        })
       });
       const newMnemonic = wallet.secret.data;
 
@@ -108,11 +118,41 @@ export default {
       this.downloadText(newMnemonic, `affondra-mnemonic-${this.getRandomStr(8)}.txt`);
       this.strLeaderMessage = 'Save mnemonic text and DO NOT lose it.';
       await this.sleep(5000);
-      this.strLeaderMessage = 'Logging in with new mnemonic';
+
+      const [{ address }] = await wallet.getAccounts();
+
+      this.strLeaderMessage = 'Sending 1000 affondollar to your wallet...';
+      
+      const txAxiosConfig = {
+        baseURL: API_FIREBASE,
+        method : 'POST',
+        url    : `/affondra/faucet`,
+        data   : {
+          to: address,
+        },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+      };
+
+      console.log('onGenerateMnemonicClicked>getFaucet:', txAxiosConfig);
+
+      const rawTx = await axios(txAxiosConfig).catch(e => {
+        console.error(e);
+        this.strLeaderMessage = 'Failed!!';
+        this.sleep(1000).then(() => {
+          this.isLoading = false;
+          throw new Error (e);
+        })
+      });
+
+      console.log('onGenerateMnemonicClicked>getFaucet>rawTx:', rawTx);
+
+      this.strLeaderMessage = 'Logging in with new mnemonic...';
       await this.sleep(1000);
 
       // Mutate account and client
-      const [{ address }] = await wallet.getAccounts();
       const client = new SigningCosmosClient(API, address, wallet);
       const {
         data: {
@@ -122,10 +162,17 @@ export default {
         }
       } = await axios.get(`${API}/auth/accounts/${address}`).catch(e => {
         console.error(e);
-        throw new Error (e);
+        this.strLeaderMessage = 'Failed!!';
+        this.sleep(1000).then(() => {
+          this.isLoading = false;
+          throw new Error (e);
+        })
       })
       this.$store.commit("accountUpdate", { account });
       this.$store.commit("clientUpdate", { client });
+
+      await this.sleep(1000);
+
       this.strLeaderMessage = 'Done';
       await this.sleep(1000);
       this.isLoading = false;
