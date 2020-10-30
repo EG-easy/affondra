@@ -10,28 +10,30 @@ import (
 )
 
 type Item struct {
-	Creator   sdk.AccAddress `json:"creator" yaml:"creator"`
-	ID        string         `json:"id" yaml:"id"`
-	Denom     string         `json:"denom" yaml:"denom"`
-	NftId     string         `json:"nftId" yaml:"nftId"`
-	TokenURI  string         `json:"token_uri" yaml:"token_uri"`
-	Price     sdk.Coin       `json:"price" yaml:"price"`
-	Affiliate sdk.Coin       `json:"affiliate" yaml:"affiliate"`
-	Receiver  sdk.AccAddress `json:"receiver" yaml:"receiver"`
-	InSale    bool           `json:"inSale" yaml:"inSale"`
+	Creator     sdk.AccAddress `json:"creator" yaml:"creator"`
+	ID          string         `json:"id" yaml:"id"`
+	Denom       string         `json:"denom" yaml:"denom"`
+	NftId       string         `json:"nftId" yaml:"nftId"`
+	TokenURI    string         `json:"token_uri" yaml:"token_uri"`
+	Price       sdk.Coin       `json:"price" yaml:"price"`
+	Affiliate   sdk.Coin       `json:"affiliate" yaml:"affiliate"`
+	Receiver    sdk.AccAddress `json:"receiver" yaml:"receiver"`
+	Description string         `json:"description" yaml:"description"`
+	InSale      bool           `json:"inSale" yaml:"inSale"`
 }
 
-func NewItem(id string, owner sdk.AccAddress, denom string, nftId string, tokenURI string, price sdk.Coin, affiliate sdk.Coin, inSale bool) Item {
+func NewItem(id string, owner sdk.AccAddress, denom string, nftId string, tokenURI string, price sdk.Coin, affiliate sdk.Coin, description string, inSale bool) Item {
 	return Item{
-		Creator:   owner,
-		ID:        id,
-		Denom:     denom,
-		NftId:     nftId,
-		TokenURI:  tokenURI,
-		Price:     price,
-		Affiliate: affiliate,
-		Receiver:  nil, //Receiver will be decided after buying
-		InSale:    inSale,
+		Creator:     owner,
+		ID:          id,
+		Denom:       denom,
+		NftId:       nftId,
+		TokenURI:    tokenURI,
+		Price:       price,
+		Affiliate:   affiliate,
+		Receiver:    nil, //Receiver will be decided after buying
+		Description: description,
+		InSale:      inSale,
 	}
 }
 
@@ -67,6 +69,10 @@ func (item Item) GetReceiver() sdk.AccAddress {
 	return item.Receiver
 }
 
+func (item Item) GetDescription() string {
+	return item.Description
+}
+
 func (item Item) GetInSale() bool {
 	return item.InSale
 }
@@ -82,6 +88,10 @@ func (item *Item) SetReceiver(addr sdk.AccAddress) {
 	item.Receiver = addr
 }
 
+func (item *Item) SetDescription(desc string) {
+	item.Description = desc
+}
+
 func (item *Item) ChangeInSaleStatus() {
 	item.InSale = !item.InSale
 }
@@ -95,6 +105,7 @@ TokenURI:%s
 Price:%s
 Affiliate:%s
 Receiver:%s
+Description:%s
 InSale:%v`,
 		item.ID,
 		item.Creator,
@@ -104,6 +115,7 @@ InSale:%v`,
 		item.Price,
 		item.Affiliate,
 		item.Receiver,
+		item.Description,
 		item.InSale,
 	)
 }
@@ -181,7 +193,7 @@ func (items Items) MarshalJSON() ([]byte, error) {
 	itemJSON := make(ItemJSON)
 	for _, item := range items {
 		id := item.GetID()
-		item := NewItem(id, item.GetOwner(), item.GetDenom(), item.GetNftid(), item.GetTokenURI(), item.GetPrice(), item.GetAffiliate(), item.GetInSale())
+		item := NewItem(id, item.GetOwner(), item.GetDenom(), item.GetNftid(), item.GetTokenURI(), item.GetPrice(), item.GetAffiliate(), item.GetDescription(), item.GetInSale())
 		itemJSON[id] = item
 	}
 	return json.Marshal(itemJSON)
@@ -195,7 +207,7 @@ func (items *Items) UnmarshalJSON(b []byte) error {
 	}
 
 	for id, item := range itemJSON {
-		baseitem := NewItem(id, item.GetOwner(), item.GetDenom(), item.GetNftid(), item.GetTokenURI(), item.GetPrice(), item.GetAffiliate(), item.GetInSale())
+		baseitem := NewItem(id, item.GetOwner(), item.GetDenom(), item.GetNftid(), item.GetTokenURI(), item.GetPrice(), item.GetAffiliate(), item.GetDescription(), item.GetInSale())
 		*items = append(*items, baseitem)
 	}
 	return nil

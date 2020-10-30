@@ -15,13 +15,14 @@ import (
 var _ = strconv.Itoa(42)
 
 type createItemRequest struct {
-	BaseReq   rest.BaseReq `json:"base_req"`
-	Creator   string       `json:"creator"`
-	Denom     string       `json:"denom"`
-	NftId     string       `json:"nftId"`
-	Price     string       `json:"price"`
-	Affiliate string       `json:"affiliate"`
-	InSale    string       `json:"inSale"`
+	BaseReq     rest.BaseReq `json:"base_req"`
+	Creator     string       `json:"creator"`
+	Denom       string       `json:"denom"`
+	NftId       string       `json:"nftId"`
+	Price       string       `json:"price"`
+	Affiliate   string       `json:"affiliate"`
+	Description string       `json:"description"`
+	InSale      string       `json:"inSale"`
 }
 
 func createItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
@@ -44,6 +45,7 @@ func createItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 		parsedDenom := req.Denom
 
 		parsedNftId := req.NftId
+		parsedDescription := req.Description
 
 		parsedPrice, err := sdk.ParseCoin(req.Price)
 		if err != nil {
@@ -69,6 +71,7 @@ func createItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 			parsedNftId,
 			parsedPrice,
 			parsedAffiliate,
+			parsedDescription,
 			parsedInSale,
 		)
 
@@ -83,14 +86,15 @@ func createItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 }
 
 type setItemRequest struct {
-	BaseReq   rest.BaseReq `json:"base_req"`
-	ID        string       `json:"id"`
-	Creator   string       `json:"creator"`
-	Denom     string       `json:"denom"`
-	NftId     string       `json:"nftId"`
-	Price     string       `json:"price"`
-	Affiliate string       `json:"affiliate"`
-	InSale    string       `json:"inSale"`
+	BaseReq     rest.BaseReq `json:"base_req"`
+	ID          string       `json:"id"`
+	Creator     string       `json:"creator"`
+	Denom       string       `json:"denom"`
+	NftId       string       `json:"nftId"`
+	Price       string       `json:"price"`
+	Affiliate   string       `json:"affiliate"`
+	Description string       `json:"description"`
+	InSale      string       `json:"inSale"`
 }
 
 func setItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
@@ -113,6 +117,8 @@ func setItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 		parsedDenom := req.Denom
 
 		parsedNftId := req.NftId
+
+		parsedDescription := req.Description
 
 		parsedPrice, err := sdk.ParseCoin(req.Price)
 		if err != nil {
@@ -138,6 +144,7 @@ func setItemHandler(cliCtx context.CLIContext) http.HandlerFunc {
 			parsedNftId,
 			parsedPrice,
 			parsedAffiliate,
+			parsedDescription,
 			parsedInSale,
 		)
 
