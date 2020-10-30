@@ -3,7 +3,7 @@ info:
   version: '1.0'
   title: NFT
 servers:
-  - url: http://lcd.affondra.com:1317
+  - url: https://api.affondra.com
 tags:
   - name: NFT
   - name: Affondra
