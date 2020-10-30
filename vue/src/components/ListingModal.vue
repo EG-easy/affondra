@@ -149,7 +149,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      strLeaderMessage: 'asd',
+      strLeaderMessage: 'Processing...',
       hasImage: false,
       image: null,
       errorMessage: "",
