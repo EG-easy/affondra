@@ -5,39 +5,47 @@
     <div class="modal-wrapper" @click.self="$emit('close')">
       <div class="modal-container is-flex is-flex-direction-column has-text-black">
         <div class="has-text-left my-2">
-          <h1 class="title has-text-black">Enter Mnemonic</h1>
+          <h1 class="title has-text-black">Login</h1>
         </div>
-        <div class="field my-0">
-          <div class="control">
-            <textarea v-model="strMnemonic" class="textarea is-primary" placeholder="Enter your nemonic here"></textarea>
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">1. Set mnumonic</h4>
+        </div>
+        <div class="box is-flex is-flex-direction-column" :style="{'border': '#000 solid 1px'}">
+          <v-checkbox v-model="ischeckedGenerateNewMnumonic" color="indigo">
+            <template v-slot:label>
+              <span class="is-size-5">Generate new mnumonic</span>
+            </template>
+          </v-checkbox>
+          <div class="has-text-left mb-4">
+            <h3 class="subtitle is-4 has-text-black has-text-centered">OR</h3 >
+          </div>
+          <div class="field my-0">
+            <div class="control">
+              <textarea v-model="strMnemonic" :style="{'border': '#ddd solid 1px'}" :disabled="ischeckedGenerateNewMnumonic" class="textarea is-primary" placeholder="Enter your nemonic here"></textarea>
+            </div>
           </div>
         </div>
-        <div>{{ errorMessage }}</div>
-        <div class="is-flex is-flex-direction-row my-2">
-          <button class="button is-primary is-light" @click="strMnemonic = ''">
-            <span>Clear</span>
-          </button>
-          <div :style="{'width':'10px'}"></div>
-          <button class="is-flex-grow-1 button is-primary" @click="onLoginClicked">
-            <span class="icon">
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">2. Set password</h4>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input v-model="password" class="input" type="password" placeholder="Password">
+            <span class="icon is-small is-left">
               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
+                <path fill="currentColor" d="M7,14A2,2 0 0,1 5,12A2,2 0 0,1 7,10A2,2 0 0,1 9,12A2,2 0 0,1 7,14M12.65,10C11.83,7.67 9.61,6 7,6A6,6 0 0,0 1,12A6,6 0 0,0 7,18C9.61,18 11.83,16.33 12.65,14H17V18H21V14H23V10H12.65Z" />
               </svg>
             </span>
-            <span>Login</span>
-          </button>
+          </p>
         </div>
-        <div class="has-text-left my-4">
-          <!--<span class="tag is-primary">Enter Mnemonic</span>-->
-          <h3 class="subtitle is-4 has-text-black has-text-centered">OR</h3 >
-        </div>
-        <button class="button is-info" @click="isLoading = true;onGenerateMnemonicClicked();">
+        <div>{{ errorMessage }}</div>
+        <button :disabled="!isValid" class="button is-primary my-4" @click="onLoginClicked();">
           <span class="icon">
             <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M6.5,3C8.46,3 10.13,4.25 10.74,6H22V9H18V12H15V9H10.74C10.13,10.75 8.46,12 6.5,12C4,12 2,10 2,7.5C2,5 4,3 6.5,3M6.5,6A1.5,1.5 0 0,0 5,7.5A1.5,1.5 0 0,0 6.5,9A1.5,1.5 0 0,0 8,7.5A1.5,1.5 0 0,0 6.5,6M8,17H11V14H13V17H16V19H13V22H11V19H8V17Z" />
+              <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
             </svg>
           </span>
-          <span>Generate new mnemonic</span>
+          <span>Login</span>
         </button>
       </div>
     </div>
@@ -48,9 +56,10 @@
 <script>
 import * as bip39 from "bip39";
 import axios from "axios";
+import store from "store";
 import { Secp256k1HdWallet, SigningCosmosClient } from "@cosmjs/launchpad";
 
-const API = "http://lcd.affondra.com:8888";
+const API = "https://api.affondra.com";
 const API_FIREBASE = 'https://asia-northeast1-affondra.cloudfunctions.net';
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'; 
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -63,16 +72,18 @@ export default {
   },
   data() {
     return {
+      ischeckedGenerateNewMnumonic: true,
       isLoading: false,
       strLeaderMessage: 'Processing...',
-      strMnemonic: "spawn legend husband noble snap echo tennis dream cable pottery gauge share record clump only nerve play cute heavy edge inner wine tragic gap",
+      strMnemonic: "",
       loggingIn: false,
       errorMessage: "",
+      password: "",
     }
   },
   computed: {
-    isMnemonicValid() {
-      return bip39.validateMnemonic(this.passwordClean);
+    isValid() {
+      return (this.ischeckedGenerateNewMnumonic || bip39.validateMnemonic(this.strMnemonic)) && this.password.length >= 4;
     },
   },
   methods: {
@@ -96,7 +107,21 @@ export default {
       window.URL.revokeObjectURL(url); // release the used object.
       a.parentNode.removeChild(a); // delete the temporary "a" element
     },
-    async onGenerateMnemonicClicked () {
+    async onLoginClicked () {
+      if (this.ischeckedGenerateNewMnumonic) {
+        await this.generatedMnemonicAndLogin().catch(e => {
+          throw new Error (e);
+        })
+      } else {
+        await this.loginWithMnemonic().catch(e => {
+          throw new Error (e);
+        })
+      }
+      //store password
+      store.set('user', { serializedWallet: await this.$store.state.client.signer.serialize(this.password) });
+      console.log(store.get('user'));
+    },
+    async generatedMnemonicAndLogin () {
       axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'; 
       axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       
@@ -178,23 +203,39 @@ export default {
       this.isLoading = false;
       this.$emit('close');
     },
-    async onLoginClicked () {
-      this.loggingIn = true;
+    async loginWithMnemonic () {
+      
+      this.strLeaderMessage = 'Logging in...';
+      this.isLoading = true;
+      await this.sleep(100);
+
+      // Validate mnemonic
       let strMnemonic = this.strMnemonic;
       console.log('bip39.validateMnemonic:', bip39.validateMnemonic(strMnemonic));
       if (!bip39.validateMnemonic(strMnemonic)) {
-        this.errorMessage = 'Invalid mnemonic.';
-        // this.loggingIn = false;
-        return null;
+        this.strLeaderMessage = 'Invalid mnemonic.';
+        this.sleep(1000).then(() => {
+          this.isLoading = false;
+          throw new Error ('INVALID_MNEMONIC');
+        })
       }
+
+      // Sign in
       await this.$store.dispatch("accountSignIn", {
         mnemonic: strMnemonic,
-      }).catch((e) => {
-        console.error(e)
-        this.errorMessage = 'Login failed.';
-        this.loggingIn = false;
-        throw new Error(e)
+      }).catch(e => {
+        console.error(e);
+        this.strLeaderMessage = 'Login Failed!!';
+        this.sleep(1000).then(() => {
+          this.isLoading = false;
+          throw new Error(e);
+        })
       })
+      await this.sleep(1000);
+      this.strLeaderMessage = 'Done';
+      await this.sleep(1000);
+
+      // Close loader and modal
       this.loggingIn = false;
       this.$emit('close');
     },
