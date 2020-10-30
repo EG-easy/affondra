@@ -2,14 +2,20 @@ const functions = require('firebase-functions');
 
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
+
 const { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath } = require('@cosmjs/launchpad');
 
-const API_BASE_URL = 'http://117.102.198.165:1317';
-const ADDRESS_PREFIX = "cosmos"
-const API_FAUCET_FROM = 'cosmos1y4zc5dseqejz2ysyzkfuay80z6nnaszr5nhn5y';
-const MNEMONIC = 'frequent trumpet history always absorb crouch picture kangaroo north sibling salon hub decorate very ozone pink board clinic raven diamond float bitter swear husband'
+// get env variables
+require('dotenv').config()
+const env = process.env
+const API_BASE_URL = env.API_BASE_URL;
+const ADDRESS_PREFIX = env.ADDRESS_PREFIX;
+const API_FAUCET_FROM = env.API_FAUCET_FROM;
+const MNEMONIC = env.MNEMONIC;
 
 const app = express();
+app.use(cors({origin: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,13 +45,13 @@ app.post('/faucet', (req, res) => {
       headers: {'Content-Type': 'application/json'},
       data   : {
         "base_req": {
-          "from": "cosmos1y4zc5dseqejz2ysyzkfuay80z6nnaszr5nhn5y",
+          "from": API_FAUCET_FROM,
           "memo": "You are a part of Affondra🤪",
           "chain_id": "affondra",
           "gas": "auto"
         },
         "amount": [
-          { "denom": "affondollar", "amount": "50" },
+          { "denom": "affondollar", "amount": "1000" },
           { "denom": "stake", "amount": "50" }
         ]
       }
