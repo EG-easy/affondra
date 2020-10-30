@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      strMnemonic: "",
+      strMnemonic: "spawn legend husband noble snap echo tennis dream cable pottery gauge share record clump only nerve play cute heavy edge inner wine tragic gap",
       loggingIn: false,
       errorMessage: "",
     }
@@ -72,8 +72,11 @@ export default {
       }).catch((e) => {
         console.error(e)
         this.errorMessage = 'Login failed.';
+        this.loggingIn = false;
+        throw new Error(e)
       })
       this.loggingIn = false;
+      this.$emit('close');
     },
   },
 }
