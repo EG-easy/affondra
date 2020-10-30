@@ -30,6 +30,7 @@
             <div v-if="isLoggedIn" class="navbar-item">
               <ShowWalletBalance />
             </div>
+            <!-- 
             <div v-if="isLoggedIn" class="navbar-item">
               <button class="button is-rounded">
                 <span class="icon">
@@ -40,6 +41,7 @@
                 <span>Get Tokens</span>
               </button>
             </div>
+            -->
             <div v-if="!isLoggedIn" class="navbar-item">
               <button class="button is-rounded" @click="isShowLoginModal = true">
                 <span class="icon">
