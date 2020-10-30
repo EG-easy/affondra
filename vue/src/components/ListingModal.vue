@@ -85,32 +85,32 @@
         </div>
         <div class="field has-addons">
           <p class="control">
-            <button class="button is-success is-small" @click="setPrice(price+10000)">
+            <button class="button is-success is-small" @click="setPrice(parseInt(price, 10)+10000)">
               +10000
             </button>
           </p>
           <p class="control">
-            <button class="button is-success is-small" @click="setPrice(price+1000)">
+            <button class="button is-success is-small" @click="setPrice(parseInt(price, 10)+1000)">
               +1000
             </button>
           </p>
           <p class="control">
-            <button class="button is-success is-small" @click="setPrice(price+100)">
+            <button class="button is-success is-small" @click="setPrice(parseInt(price, 10)+100)">
               +100
             </button>
           </p>
           <p class="control">
-            <button class="button is-danger is-small" @click="setPrice(price-100)">
+            <button class="button is-danger is-small" @click="setPrice(parseInt(price, 10)-100)">
               -100
             </button>
           </p>
           <p class="control">
-            <button class="button is-danger is-small" @click="setPrice(price-1000)">
+            <button class="button is-danger is-small" @click="setPrice(parseInt(price, 10)-1000)">
               -1000
             </button>
           </p>
           <p class="control">
-            <button class="button is-danger is-small" @click="setPrice(price-10000)">
+            <button class="button is-danger is-small" @click="setPrice(parseInt(price, 10)-10000)">
               -10000
             </button>
           </p>
@@ -185,7 +185,7 @@ export default {
       return (
         this.image !== null &&
         typeof this.title === 'string' && this.title.length > 0 &&
-        typeof this.price === 'number' && this.price > 0
+        parseInt(this.price, 10) > 0
       );
     },
     address() {
