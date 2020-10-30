@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false;refreshItems();" />
-  <BuyModal v-bind="items[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal = false;" />
+  <BuyModal v-bind="items[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal=false;refreshItems()" />
   <div class="is-flex is-flex-direction-column">
     <div class="is-flex is-flex-direction-row">
       <label class="checkbox is-align-self-center">
@@ -23,7 +23,7 @@
     </div>
     <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-start">
       <div v-for="(item, index) in filterdItems" :key="index" class="af-items">
-        <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=true;" />
+        <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=isLoggedIn;" />
       </div>
       <div v-if="filterdItems.length < 1" class="has-text-centered" :style="{'flex-basis':'100%'}">
         <button class="button is-primary is-light" @click="clearFilter">
@@ -94,6 +94,9 @@ export default {
     BuyModal,
   },
   computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn
+    },
     filterdItems: function () {
       return this.items.filter((v) => this.serachString.trim() === '' || v.title.indexOf(this.serachString.trim()) > -1);
     }
@@ -132,12 +135,15 @@ export default {
         this.items.push({
           title: tokenUri.name,
           denom: v.denom,
+          id: v.id,
+          inSale: v.inSale,
           description: v.description,
           imageUrl: await storageRef.child(tokenUri.imgurl).getDownloadURL(),
           price: `${v.price.amount} ${v.price.denom}`,
           visible: true,
         })
       })
+      console.log('Buy>refreshItems>items', this.items);
     }
   }
 };
