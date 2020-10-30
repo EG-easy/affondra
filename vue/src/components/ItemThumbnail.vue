@@ -1,6 +1,6 @@
 <template>
 <div class="is-flex is-flex-direction-column">
-  <figure class="image is-3by2">
+  <figure class="image is-4by3">
     <img :src="imageUrl">
   </figure>
   <div class="is-flex is-flex-direction-row">
