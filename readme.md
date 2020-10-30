@@ -1,4 +1,4 @@
-# affondra
+# Affondra
 
 <p align="center">
   <img src="./affondra-logo.jpg" width="600">
@@ -11,16 +11,30 @@ Affondra is a blockchain application using [cosmos-sdk](https://github.com/cosmo
 
 # Implementation
 ## Completed
-:heavy_check_mark: basic blockchain functions
-:heavy_check_mark: issue NFT token
-:heavy_check_mark: create Item based on NFT
-:heavy_check_mark: update Item infomation
-:heavy_check_mark: buy Item
-:heavy_check_mark: affiliate system
-:heavy_check_mark: faucet system
-:heavy_check_mark: web wallet
+:heavy_check_mark: basic blockchain functions  
+:heavy_check_mark: issue NFT token  
+:heavy_check_mark: create Item based on NFT  
+:heavy_check_mark: update Item infomation  
+:heavy_check_mark: buy Item  
+:heavy_check_mark: affiliate system  
+:heavy_check_mark: faucet system  
+:heavy_check_mark: web wallet  
 
 Firstly, watch [Demo]()!
+## API Endpoint (Swagger)
+You can refer to the api endpoint of Affondra module and NFT module.
+
+## System Architecture
+<p align="center">
+  <img src="./architecture.png" width="600">
+</p>
+
+0. Develop Affondra blockchain application with [Starport](https://github.com/tendermint/starport).
+1. Use [Firebase Hosting](https://firebase.google.com/docs/hosting) to host [Vue](https://vuejs.org/) application.
+2. Use [Firebase storage](https://firebase.google.com/docs/storage) to keep item images that users uploaded.
+3. Use [Firebase cloud functions](https://firebase.google.com/docs/functions) to set a faucet function. The faucet account mnemonic keys are stored in the cloud service so that users can get faucet with no time and try our product quickly.
+4. Nginx is used for load balancing and cors setting. It seems that rest server won't response to `OPTIONS` method request so we proxy frontend request using Nginx server.
+5. Affondra module is originally created to trade NFT, to motivate affliate, and to certify correct payment.
 
 ## Install
 ### affondrad & affondracli
@@ -35,7 +49,7 @@ $ make
 
 Try `affondracli version` and `affondrad version` to verify everything is OK!
 
-### *Initialize configuration files and genesis file**
+### Initialize configuration files and genesis file
 
 Just use shell scripts bellow.
 ```
@@ -67,23 +81,9 @@ $ affondracli tx affondra create-item your-favorite-denom random-nft-id 1000affo
 ### Buy Item
 Now your friend A introduces the item to your friend B, and friend B bought the item with the command below. Then you will get 990affondollar and your friend will get 10affondollar as a affiliate reward, and B will successfully receive the NFT from you.
 ```bash
-$ affondra tx buy-item random-nft-id B'address A'address --from B -y
+$ affondracli tx buy-item random-nft-id B'address A'address --from B -y
 ```
 
-## API endpoint (Swagger)
-You can refer to the api endpoint of Affondra chain.
-
-## System architecture
-<p align="center">
-  <img src="./architecture.png" width="900">
-</p>
-
-0. Develop Affondra blockchain application with [Starport](https://github.com/tendermint/starport).
-1. Use [Firebase Hosting](https://firebase.google.com/docs/hosting) to host [Vue](https://vuejs.org/) application.
-2. Use [Firebase storage](https://firebase.google.com/docs/storage) to keep item images that users uploaded.
-3. Use [Firebase cloud functions](https://firebase.google.com/docs/functions) to set a ffaucet function. The faucet account mnemonic keys are stored in the cloud service so that users can get faucet with no time and try our product quickly.
-4. Nginx is used for load balancing and cors setting. It seems that rest server won't response to `OPTIONS` method request so we proxy frontend request in Nginx server.
-5. Affondra module is originally created to trade NFT, to motivate affliate, and to certify correct payment..
 
 ## License
 Licensed under the [MIT](LICENSE).
