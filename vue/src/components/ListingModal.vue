@@ -1,6 +1,7 @@
 <template>
 <transition name="modal">
   <div class="modal-mask">
+  <LoaderModal v-if="isLoading" :message="strLeaderMessage" />
     <div class="modal-wrapper" @click.self="$emit('close')">
       <div class="modal-container is-flex is-flex-direction-column has-text-black">
         <div class="has-text-left my-2">
@@ -93,16 +94,23 @@
             </button>
           </p>
         </div>
+        <div class="has-text-left my-2">
+          <h4 class="subtitle is-4 has-text-black">4. Set affiliate reward rate</h4>
+        </div>
+        <div class="my-6">
+          <VueSlider v-model="affiliateRewardRate" :min="0" :max="100" :interval="10" :marks="{'0':'0%','20':'20%','40':'40%','60':'60%','80':'80%','100':'100%'}">
+          </VueSlider>
+        </div>
         <div>{{ errorMessage }}</div>
         <div class="is-flex is-flex-direction-row my-4">
           <!--<button :disabled="isLoading" class="button is-primary is-light" @click="onClearClicked">
             <span>Clear</span>
           </button>
           <div :style="{'width':'10px'}"></div>-->
-          <button :disabled="isLoading" class="is-flex-grow-1 button is-primary" @click="onListingClicked">
+          <button :disabled=" !isInputValid || isLoading" class="is-flex-grow-1 button is-primary" @click="onListingClicked">
             <span class=" icon">
               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
+                <path fill="currentColor" d="M13,2.03C17.73,2.5 21.5,6.25 21.95,11C22.5,16.5 18.5,21.38 13,21.93V19.93C16.64,19.5 19.5,16.61 19.96,12.97C20.5,8.58 17.39,4.59 13,4.05V2.05L13,2.03M11,2.06V4.06C9.57,4.26 8.22,4.84 7.1,5.74L5.67,4.26C7.19,3 9.05,2.25 11,2.06M4.26,5.67L5.69,7.1C4.8,8.23 4.24,9.58 4.05,11H2.05C2.25,9.04 3,7.19 4.26,5.67M2.06,13H4.06C4.24,14.42 4.81,15.77 5.69,16.9L4.27,18.33C3.03,16.81 2.26,14.96 2.06,13M7.1,18.37C8.23,19.25 9.58,19.82 11,20V22C9.04,21.79 7.18,21 5.67,19.74L7.1,18.37M12,7.5L7.5,12H11V16H13V12H16.5L12,7.5Z" />
               </svg>
             </span>
             <span>Listing</span>
@@ -115,22 +123,54 @@
 </transition>
 </template>
 
+<style lang="scss">
+.custom-mark {
+  position: absolute;
+  top: 10px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+</style>
+
 <script>
+// import axios from "axios";
+import 'vue-slider-component/theme/default.css'
+
 import ImageUploader from 'vue-image-upload-resize'
+import VueSlider from 'vue-slider-component'
+import LoaderModal from '@/components/LoaderModal.vue'
 
 export default {
   components: {
     ImageUploader,
+    LoaderModal,
+    VueSlider,
   },
   data() {
     return {
       isLoading: false,
+      strLeaderMessage: 'asd',
       hasImage: false,
       image: null,
       errorMessage: "",
       price: 100,
-      title: "",
+      title: "My item",
+      affiliateRewardRate: 10,
     }
+  },
+  computed: {
+    isInputValid: function () {
+      return (
+        this.image !== null &&
+        typeof this.title === 'string' && this.title.length > 0 &&
+        typeof this.price === 'number' && this.price > 0
+      );
+    },
+    address() {
+      const { client } = this.$store.state;
+      const address = client && client.senderAddress;
+      return address;
+    },
   },
   methods: {
     setPrice: function (newV) {
@@ -145,11 +185,72 @@ export default {
       console.log('Image selected:', output)
     },
     async onListingClicked() {
-      console.log(this.$_firebaseStorage)
+      this.isLoading = true;
+      this.strLeaderMessage = 'Uploading image...'
+
+      const imagePath = (await this.uploadImage()).metadata.fullPath;
+      console.log('onListingClicked>imagePath:', imagePath);
+
+      this.strLeaderMessage = 'Sending transaction...'
+
+      const nftId = this.getRandomStr(32);
+
+      const resSendTxMintNft = await this.$store.dispatch("sendTxMintNft", {
+        address: this.address,
+        denom: 'default',
+        nftId: nftId,
+        // id: '2iZaPwXbfdiCXRbuzmQLPVRZ5Z88tv2z',
+        tokenURI: JSON.stringify({
+          name: this.title,
+          imgurl: imagePath,
+        }),
+      }).catch((e) => {
+        console.error(e)
+        this.errorMessage = e;
+        this.strLeaderMessage = 'Error has occured. Listing was cancelled.';
+        setTimeout(()=>{
+          this.isLoading = false;
+          this.$emit('close');
+        }, 3000);
+        throw new Error('LISTING_FAILED');
+      })
+
+      console.log('onListingClicked>resSendTxMintNft', resSendTxMintNft);
+
+      this.strLeaderMessage = 'Creating your item from NFT...'      
+
+      await this.$store.dispatch("sendTxCreateItem", {
+        address: this.address,
+        denom: 'default',
+        nftId: nftId,
+        price: `${this.price}affondollar`,
+        affiliate: `${Math.floor(this.price * this.affiliateRewardRate / 100)}affondollar`,
+        inSale: true,
+        description: '*KZF*',
+      }).catch((e) => {
+        console.error(e)
+        this.errorMessage = e;
+        this.strLeaderMessage = 'Error has occured. Listing was cancelled.';
+        setTimeout(()=>{
+          this.isLoading = false;
+          this.$emit('close');
+        }, 3000);
+        throw new Error('LISTING_FAILED');
+      })
+
+      this.strLeaderMessage = 'Done';
+      setTimeout(()=>{
+        this.isLoading = false;
+        this.$emit('close');
+      }, 1000);
+
+    },
+    async uploadImage() {
+      // upload data
       let ref = this.$_firebaseStorage.ref().child(`images/${this.getRandomStr(30)}.jpg`);
-      ref.putString(this.image.dataUrl, 'data_url').then(function () {
-        console.log('Uploaded a blob or file!');
-      });
+      const res = await ref.putString(this.image.dataUrl, 'data_url');
+      console.log('Uploading Image>res:', res);
+      return res;
     },
     onClearClicked: function () {
       this.title = "";
@@ -166,7 +267,7 @@ export default {
 
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;
