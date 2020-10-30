@@ -21,7 +21,7 @@ func handleMsgCreateItem(ctx sdk.Context, k keeper.Keeper, msg types.MsgCreateIt
 		return nil, sdkerrors.Wrap(types.ErrAlreadyOnSale, "The item is already on market")
 	}
 
-	item := types.NewItem(msg.ID, msg.Creator, msg.Denom, msg.NftId, nft.GetTokenURI(), msg.Price, msg.Affiliate, msg.InSale)
+	item := types.NewItem(msg.ID, msg.Creator, msg.Denom, msg.NftId, nft.GetTokenURI(), msg.Price, msg.Affiliate, msg.Description, msg.InSale)
 	// check if owner is correct
 	if !msg.Creator.Equals(nft.GetOwner()) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "Incorrect Owner")

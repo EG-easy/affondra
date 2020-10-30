@@ -8,24 +8,26 @@ import (
 var _ sdk.Msg = &MsgSetItem{}
 
 type MsgSetItem struct {
-	ID        string         `json:"id" yaml:"id"`
-	Creator   sdk.AccAddress `json:"creator" yaml:"creator"`
-	Denom     string         `json:"denom" yaml:"denom"`
-	NftId     string         `json:"nftId" yaml:"nftId"`
-	Price     sdk.Coin       `json:"price" yaml:"price"`
-	Affiliate sdk.Coin       `json:"affiliate" yaml:"affiliate"`
-	InSale    bool           `json:"inSale" yaml:"inSale"`
+	ID          string         `json:"id" yaml:"id"`
+	Creator     sdk.AccAddress `json:"creator" yaml:"creator"`
+	Denom       string         `json:"denom" yaml:"denom"`
+	NftId       string         `json:"nftId" yaml:"nftId"`
+	Price       sdk.Coin       `json:"price" yaml:"price"`
+	Affiliate   sdk.Coin       `json:"affiliate" yaml:"affiliate"`
+	Description string         `json:"description" yaml:"description"`
+	InSale      bool           `json:"inSale" yaml:"inSale"`
 }
 
-func NewMsgSetItem(creator sdk.AccAddress, id string, denom string, nftId string, price sdk.Coin, affiliate sdk.Coin, inSale bool) MsgSetItem {
+func NewMsgSetItem(creator sdk.AccAddress, id string, denom string, nftId string, price sdk.Coin, affiliate sdk.Coin, description string, inSale bool) MsgSetItem {
 	return MsgSetItem{
-		ID:        id,
-		Creator:   creator,
-		Denom:     denom,
-		NftId:     nftId,
-		Price:     price,
-		Affiliate: affiliate,
-		InSale:    inSale,
+		ID:          id,
+		Creator:     creator,
+		Denom:       denom,
+		NftId:       nftId,
+		Price:       price,
+		Affiliate:   affiliate,
+		Description: description,
+		InSale:      inSale,
 	}
 }
 
