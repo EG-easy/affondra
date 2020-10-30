@@ -14,7 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
 )
 
-//GetCmdBuyItem creates new item
+//GetCmdCreateItem creates new item
 func GetCmdCreateItem(cdc *codec.Codec) *cobra.Command {
 	return &cobra.Command{
 		Use:   "create-item [denom] [nftId] [price] [affiliate] [description] [inSale]",

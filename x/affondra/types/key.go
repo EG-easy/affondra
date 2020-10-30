@@ -21,10 +21,12 @@ const (
 	QuerierRoute = ModuleName
 )
 
+// ItemPrefix
 const (
 	ItemPrefix = "item-"
 )
 
+// KeyPrefix for query
 var (
 	CollectionsKeyPrefix = []byte{0x00} // key for Item Collection
 	OwnersKeyPrefix      = []byte{0x01}
@@ -42,6 +44,7 @@ func GetCollectionKey(denom string) []byte {
 	return append(CollectionsKeyPrefix, bs...)
 }
 
+// SplitOwnerKey returns address as a key
 func SplitOwnerKey(key []byte) (sdk.AccAddress, []byte) {
 	if len(key) != 53 {
 		panic(fmt.Sprintf("unexpected key length %d", len(key)))
@@ -53,6 +56,7 @@ func SplitOwnerKey(key []byte) (sdk.AccAddress, []byte) {
 	return sdk.AccAddress(address), IDsBz
 }
 
+// GetOwnerKey returns owner address as a key
 func GetOwnerKey(address sdk.AccAddress) []byte {
 	fmt.Printf("OwnersKeyPrefix: %b\n", OwnersKeyPrefix)
 	return append(OwnersKeyPrefix, address.Bytes()...)

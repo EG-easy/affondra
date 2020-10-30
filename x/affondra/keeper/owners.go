@@ -5,6 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+// GetOwner uses address as a key and return s owner struct
 func (k Keeper) GetOwner(ctx sdk.Context, addr sdk.AccAddress) (owner types.Owner, found bool) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.GetOwnerKey(addr)
@@ -16,6 +17,7 @@ func (k Keeper) GetOwner(ctx sdk.Context, addr sdk.AccAddress) (owner types.Owne
 	return owner, true
 }
 
+// SetOwner uses address as a key and update items
 func (k Keeper) SetOwner(ctx sdk.Context, addr sdk.AccAddress, owner types.Owner) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.GetOwnerKey(addr)

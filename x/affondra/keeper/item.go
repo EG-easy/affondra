@@ -124,7 +124,7 @@ func (k Keeper) GetItemOwner(ctx sdk.Context, key string) sdk.AccAddress {
 	return item.Creator
 }
 
-// Check if the key exists in the store
+// ItemExists check if the key exists in the store
 func (k Keeper) ItemExists(ctx sdk.Context, key string) bool {
 	store := ctx.KVStore(k.storeKey)
 	return store.Has([]byte(types.ItemPrefix + key))
