@@ -138,6 +138,7 @@ InSale:%v`,
 	)
 }
 
+// Items define a list of Item
 type Items []Item
 
 // NewItems is a constructor function for Items
@@ -148,10 +149,12 @@ func NewItems(items ...Item) Items {
 	return Items(items).Sort()
 }
 
+// Append appends two set of Items
 func (items Items) Append(itemsB ...Item) Items {
 	return append(items, itemsB...).Sort()
 }
 
+// Find returns searched item from the set
 func (items Items) Find(id string) (item Item, found bool) {
 	index := items.find(id)
 	if index == -1 {
@@ -232,7 +235,7 @@ func (items *Items) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Findable and Sort interfaces
+// ElAtIndex is Findable and Sort interface
 func (items Items) ElAtIndex(index int) string { return items[index].GetID() }
 func (items Items) Len() int                   { return len(items) }
 func (items Items) Less(i, j int) bool {

@@ -25,7 +25,7 @@ func ParamKeyTable() params.KeyTable {
 
 // Params - used for initializing default parameter for affondra at genesis
 type Params struct {
-	// TODO: Add your Parameter to the Paramter struct
+	// TODO: Add your Parameter to the Parameter struct
 	// KeyParamName string `json:"key_param_name"`
 }
 
