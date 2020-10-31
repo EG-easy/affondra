@@ -4,7 +4,7 @@
     <LoaderModal v-if="isLoading" :message="strLeaderMessage" />
     <div class="modal-wrapper" @click.self="$emit('close')">
       <div class="modal-container is-flex is-flex-direction-column has-text-black">
-        <div class="has-text-left my-2">
+        <div v-if="inSale" class="has-text-left my-2">
           <h1 class="title has-text-black">Buy</h1>
         </div>
         <div class="box is-flex is-flex-direction-column">
@@ -35,33 +35,34 @@
           </p>
         </div>
         -->
-        <v-checkbox v-model="isConfirmPurchase" color="indigo">
-          <template v-slot:label>
-            <span class="is-size-6">
-              Read the
-              <span class="af-tip has-text-danger">
-                TERM
-                <div class="af-tip-description has-text-centered">Its DEMO so you will recieve only NFT🙃</div>
+        <template v-if="inSale">
+          <v-checkbox v-model="isConfirmPurchase" color="indigo">
+            <template v-slot:label>
+              <span class="is-size-6">
+                Read the
+                <span class="af-tip has-text-danger">
+                  TERM
+                  <div class="af-tip-description has-text-centered">Its DEMO so you will recieve only NFT🙃</div>
+                </span>
+                and confirm the purchase.</span>  
+            </template>
+          </v-checkbox>
+          <div class="has-text-info">{{ errorMessage }}</div>
+          <div class="is-flex is-flex-direction-row my-4">
+            <!--<button :disabled="isLoading" class="button is-primary is-light" @click="onClearClicked">
+              <span>Clear</span>
+            </button>
+            <div :style="{'width':'10px'}"></div>-->
+            <button :disabled="!isInputValid" class="is-flex-grow-1 button is-primary" @click="onBuyClicked">
+              <span class="icon">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M5.5,21C4.72,21 4.04,20.55 3.71,19.9V19.9L1.1,10.44L1,10A1,1 0 0,1 2,9H6.58L11.18,2.43C11.36,2.17 11.66,2 12,2C12.34,2 12.65,2.17 12.83,2.44L17.42,9H22A1,1 0 0,1 23,10L22.96,10.29L20.29,19.9C19.96,20.55 19.28,21 18.5,21H5.5M12,4.74L9,9H15L12,4.74M12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17A2,2 0 0,0 14,15A2,2 0 0,0 12,13Z" />
+                </svg>
               </span>
-              and confirm the purchase.</span>  
-          </template>
-        </v-checkbox>
-        <div class="has-text-info">{{ errorMessage }}</div>
-        <div class="is-flex is-flex-direction-row my-4">
-          <!--<button :disabled="isLoading" class="button is-primary is-light" @click="onClearClicked">
-            <span>Clear</span>
-          </button>
-          <div :style="{'width':'10px'}"></div>-->
-          <button :disabled="!isInputValid" class="is-flex-grow-1 button is-primary" @click="onBuyClicked">
-            <span class="icon">
-              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M5.5,21C4.72,21 4.04,20.55 3.71,19.9V19.9L1.1,10.44L1,10A1,1 0 0,1 2,9H6.58L11.18,2.43C11.36,2.17 11.66,2 12,2C12.34,2 12.65,2.17 12.83,2.44L17.42,9H22A1,1 0 0,1 23,10L22.96,10.29L20.29,19.9C19.96,20.55 19.28,21 18.5,21H5.5M12,4.74L9,9H15L12,4.74M12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17A2,2 0 0,0 14,15A2,2 0 0,0 12,13Z" />
-              </svg>
-            </span>
-            <span>Buy</span>
-          </button>
-        </div>
-        <progress :style="{'visibility':isLoading ? 'visible' : 'hidden'}" class="progress is-small is-primary" max="100"></progress>
+              <span>Buy</span>
+            </button>
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -115,6 +116,7 @@ export default {
     imageUrl: String,
     description: String,
     id: String,
+    inSale: Boolean,
   },
   data() {
     return {
