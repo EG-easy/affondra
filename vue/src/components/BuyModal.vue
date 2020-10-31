@@ -36,6 +36,29 @@
         </div>
         -->
         <template v-if="inSale">
+          <div class="has-text-left my-2">
+            <h4 class="subtitle is-4 has-text-black">Address whose introduce you</h4>
+          </div>
+          <div class="field">
+            <p class="control has-icons-left has-icons-right">
+              <input v-model="addressIntroducedBy" class="input" type="text" placeholder="Address whose introduce you">
+              <span class="icon is-small is-left">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M13,17V19H14A1,1 0 0,1 15,20H22V22H15A1,1 0 0,1 14,23H10A1,1 0 0,1 9,22H2V20H9A1,1 0 0,1 10,19H11V17H5V15.5C5,13.57 8.13,12 12,12C15.87,12 19,13.57 19,15.5V17H13M12,3A3.5,3.5 0 0,1 15.5,6.5A3.5,3.5 0 0,1 12,10A3.5,3.5 0 0,1 8.5,6.5A3.5,3.5 0 0,1 12,3Z" />
+                </svg>
+              </span>
+              <span v-if="isValidAddress" class="icon is-small is-right">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24" :style="{'color':'green'}">
+                  <path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+                </svg>
+              </span>
+              <span v-if="addressIntroducedBy.length > 0 && !isValidAddress" class="icon is-small is-right">
+                <svg style="width:24px;height:24px" viewBox="0 0 24 24" :style="{'color':'red'}">
+                  <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                </svg>
+              </span>
+            </p>
+          </div>
           <v-checkbox v-model="isConfirmPurchase" color="indigo">
             <template v-slot:label>
               <span class="is-size-6">
@@ -125,16 +148,21 @@ export default {
       strLeaderMessage: 'Processing...',
       errorMessage: '',
       isConfirmPurchase: false,
+      addressIntroducedBy: '',
     }
   },
   computed: {
     isLoggedIn () {
       return this.$store.getters.isLoggedIn
     },
+    isValidAddress () {
+      return /^cosmos1[a-z0-9]{38}$/.test(this.addressIntroducedBy)
+    },
     isInputValid: function () {
       return (
         this.isLoggedIn &&
-        this.isConfirmPurchase
+        this.isConfirmPurchase &&
+        (this.addressIntroducedBy === '' || this.isValidAddress)
       );
     },
     address() {
@@ -158,7 +186,7 @@ export default {
       const resSendTxBuyItem = await this.$store.dispatch("sendTxBuyItem", {
         buyerAddress: this.address,
         id: this.id,
-        addressIntroducedBy: 'cosmos1ffu8y09f8snw0730m4e4p668j88ds42jlpjenv',
+        addressIntroducedBy: this.isValidAddress ? this.addressIntroducedBy : 'cosmos1ffu8y09f8snw0730m4e4p668j88ds42jlpjenv',
       }).catch((e) => {
         console.error(e)
         this.errorMessage = e;

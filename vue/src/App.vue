@@ -29,7 +29,7 @@
                     </svg>
                   </span>
                 </span>
-                <input id="clipBoard" type="text" :value="address" :style="{height:'0',width:'0'}" />
+                <input id="clipBoard" type="text" :value="address" :style="{height:'0',width:'1px'}" />
               </div>
             </div>
             <div v-if="isLoggedIn" class="navbar-item has-text-right">
