@@ -15,7 +15,7 @@
 </transition>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #loader {
   width: max(10vh, 10vw);
   height: max(10vh, 10vw);
