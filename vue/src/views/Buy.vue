@@ -33,7 +33,7 @@
           -->
         </div>
         <div class="control has-icons-left is-align-self-center">
-          <input v-model="serachString" class="input is-small" type="email" placeholder="Search">
+          <input v-model="searchString" class="input is-small" type="email" placeholder="Search">
           <span class="icon is-small is-left">
             <i class="fa fa-search"></i>
           </span>
@@ -41,13 +41,13 @@
       </div>
       <div class="column is-12" :style="{'padding':'10px 0.75rem 5px 0.75rem'}">
         <div :style="{'border-top':'1px solid #aaa'}">
-          <strong class="has-text-primary">{{`${filterdItems.length} results for seraching.`}}</strong>
+          <strong class="has-text-primary">{{`${filterdItemsByRegExp.length} results for seraching.`}}</strong>
         </div>
       </div>
-      <div v-for="(item, index) in filterdItems" :key="index" class="column is-3">
+      <div v-for="(item, index) in filterdItemsByRegExp" :key="index" class="column is-3">
         <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=isLoggedIn;" />
       </div>
-      <div v-if="filterdItems.length < 1" class="column is-12 has-text-centered" :style="{'flex-basis':'100%'}">
+      <div v-if="filterdItemsByRegExp.length < 1" class="column is-12 has-text-centered" :style="{'flex-basis':'100%'}">
         <button class="button is-primary is-light" @click="clearFilter">
           No result. Click here to clear filters.
         </button>
@@ -120,12 +120,18 @@ export default {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn
     },
-    filterdItems: function () {
+    filterdItemsByProps: function () {
       return this.items.filter((v) => {
         if (this.selectedSellingStatusFilter === 'sale' && !v.inSale) return false;
         if (this.selectedSellingStatusFilter === 'sold' && v.inSale) return false;
-        return this.serachString.trim() === '' || v.title.indexOf(this.serachString.trim()) > -1
+        return true
       });
+    },
+    filterdItemsByRegExp: function () {
+      const searchString = this.searchString.trim();
+      if (searchString === '') return this.filterdItemsByProps;
+      const pattern = new RegExp(searchString, 'i');
+      return this.filterdItemsByProps.filter((v) => pattern.test(v.title));
     }
   },
   mounted: function () {
@@ -138,7 +144,7 @@ export default {
       isShowBuyModal: false,
       indexSelectedItem: 0,
       isShowListingModal: false,
-      serachString: "",
+      searchString: "",
       items: [{
         title: "title1",
         imageUrl: "https://bulma.io/images/placeholders/256x256.png",
@@ -150,7 +156,7 @@ export default {
   },
   methods: {
     clearFilter: function () {
-      this.serachString = "";
+      this.searchString = "";
     },
     refreshItems: async function () {
       const storageRef = this.$_firebaseStorage.ref();
