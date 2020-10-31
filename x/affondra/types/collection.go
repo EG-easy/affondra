@@ -7,11 +7,13 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+// Collection is a set of items categorized by denom
 type Collection struct {
 	Denom string `json:"denom,omitempty" yaml:"denom"`
 	Items Items  `json:"items" yaml:"items"`
 }
 
+// NewCollection is a constructor function for Collection
 func NewCollection(denom string, items Items) Collection {
 	return Collection{
 		Denom: strings.TrimSpace(denom),
