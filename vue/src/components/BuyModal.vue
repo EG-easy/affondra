@@ -4,6 +4,9 @@
     <LoaderModal v-if="isLoading" :message="strLeaderMessage" />
     <div class="modal-wrapper" @click.self="$emit('close')">
       <div class="modal-container is-flex is-flex-direction-column has-text-black">
+        <div class="has-text-left my-2">
+          <h1 class="title has-text-black">Buy</h1>
+        </div>
         <div class="box is-flex is-flex-direction-column">
           <figure class="image is-4by3">
             <img draggable="false" :src="imageUrl">

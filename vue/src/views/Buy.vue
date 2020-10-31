@@ -2,30 +2,52 @@
 <div class="container">
   <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false;refreshItems();" />
   <BuyModal v-bind="items[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal=false;refreshItems()" />
-  <div class="is-flex is-flex-direction-column">
-    <div class="is-flex is-flex-direction-row">
-      <label class="checkbox is-align-self-center">
-        <input type="checkbox">
-        Now on sale
-      </label>
-      <div class="is-flex-grow-1"></div>
-      <div class="control has-icons-left is-align-self-center">
-        <input v-model="serachString" class="input is-small" type="email" placeholder="Search">
-        <span class="icon is-small is-left">
-          <i class="fa fa-search"></i>
-        </span>
+  <div class="is-flex is-flex-direction-column pa-2">
+    <div class="columns is-multiline is-1">
+      <div class="column is-flex is-flex-direction-row">
+        <div class="field has-addons" :style="{'margin-bottom':'0'}">
+          <p class="control">
+            <button class="button is-small" :class="{'is-primary':selectedSellingStatusFilter === 'sale'}" @click="selectedSellingStatusFilter='sale'">
+              <span>SALE</span>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-small" :class="{'is-primary':selectedSellingStatusFilter === 'both'}" @click="selectedSellingStatusFilter='both'">
+              <span>BOTH</span>
+            </button>
+          </p>
+          <p class="control">
+            <button class="button is-small" :class="{'is-primary':selectedSellingStatusFilter === 'sold'}" @click="selectedSellingStatusFilter='sold'">
+              <span>SOLD</span>
+            </button>
+          </p>
+        </div>
+        <div class="is-flex-grow-1 is-flex is-flex-direction-row mx-2">
+          <!--
+          <div class="has-background-dark is-flex-grow-1">a</div>
+          <div class="has-background-dark is-flex-grow-1">a</div>
+          <div class="has-background-dark is-flex-grow-1">a</div>
+          <div class="has-background-dark is-flex-grow-1">a</div>
+          <div class="has-background-dark is-flex-grow-1">a</div>
+          <div class="has-background-dark is-flex-grow-1">a</div>
+          -->
+        </div>
+        <div class="control has-icons-left is-align-self-center">
+          <input v-model="serachString" class="input is-small" type="email" placeholder="Search">
+          <span class="icon is-small is-left">
+            <i class="fa fa-search"></i>
+          </span>
+        </div>
       </div>
-    </div>
-    <div :style="{'margin':'10px 0px 5px 0px','border-bottom':'1px solid #aaa'}"></div>
-    <div class="is-flex is-flex-direction-row">
-      <strong class="has-text-primary">{{`${filterdItems.length} results for seraching.`}}</strong>
-      <div class="is-flex-grow-1"></div>
-    </div>
-    <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-start">
-      <div v-for="(item, index) in filterdItems" :key="index" class="af-items">
+      <div class="column is-12" :style="{'padding':'10px 0.75rem 5px 0.75rem'}">
+        <div :style="{'border-top':'1px solid #aaa'}">
+          <strong class="has-text-primary">{{`${filterdItems.length} results for seraching.`}}</strong>
+        </div>
+      </div>
+      <div v-for="(item, index) in filterdItems" :key="index" class="column is-3">
         <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=isLoggedIn;" />
       </div>
-      <div v-if="filterdItems.length < 1" class="has-text-centered" :style="{'flex-basis':'100%'}">
+      <div v-if="filterdItems.length < 1" class="column is-12 has-text-centered" :style="{'flex-basis':'100%'}">
         <button class="button is-primary is-light" @click="clearFilter">
           No result. Click here to clear filters.
         </button>
@@ -40,11 +62,12 @@
 </template>
 
 <style lang="scss" scoped>
+/*
 div.af-items {
   flex-basis: 25.00%;
   padding: 10px;
 }
-
+*/
 #listing-button {
   cursor: pointer;
   position: fixed;
@@ -98,7 +121,11 @@ export default {
       return this.$store.getters.isLoggedIn
     },
     filterdItems: function () {
-      return this.items.filter((v) => this.serachString.trim() === '' || v.title.indexOf(this.serachString.trim()) > -1);
+      return this.items.filter((v) => {
+        if (this.selectedSellingStatusFilter === 'sale' && !v.inSale) return false;
+        if (this.selectedSellingStatusFilter === 'sold' && v.inSale) return false;
+        return this.serachString.trim() === '' || v.title.indexOf(this.serachString.trim()) > -1
+      });
     }
   },
   mounted: function () {
@@ -107,6 +134,7 @@ export default {
   },
   data() {
     return {
+      selectedSellingStatusFilter: 'both', // enum['sale', 'both', 'sold']
       isShowBuyModal: false,
       indexSelectedItem: 0,
       isShowListingModal: false,
@@ -129,20 +157,27 @@ export default {
       const {
         result
       } = await this.$store.dispatch("getItemList")
-      this.items = [];
-      result.forEach(async (v) => {
-        const tokenUri = JSON.parse(v.token_uri);
-        this.items.push({
-          title: tokenUri.name,
-          denom: v.denom,
-          id: v.id,
-          inSale: v.inSale,
-          description: v.description,
-          imageUrl: await storageRef.child(tokenUri.imgurl).getDownloadURL(),
-          price: `${v.price.amount} ${v.price.denom}`,
-          visible: true,
+
+      const prepareItem = function (v) {
+        return new Promise((resolve, reject) => {
+          (async () => {
+            const tokenUri = JSON.parse(v.token_uri);
+            return {
+              title: tokenUri.name,
+              denom: v.denom,
+              id: v.id,
+              inSale: v.inSale,
+              description: v.description,
+              imageUrl: (await storageRef.child(tokenUri.imgurl).getDownloadURL()),
+              price: `${v.price.amount} ${v.price.denom}`,
+              visible: true,
+            }
+          })().then((res) => resolve(res)).catch(err => reject(err));
         })
-      })
+      }
+
+      this.items = await Promise.all(result.map(prepareItem));
+
       console.log('Buy>refreshItems>items', this.items);
     }
   }

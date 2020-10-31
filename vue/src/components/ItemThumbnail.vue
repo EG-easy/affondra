@@ -1,5 +1,6 @@
 <template>
-<div class="item-thumbnail is-flex is-flex-direction-column box pa-0"
+<div class="item-thumbnail is-flex is-flex-direction-column box"
+  :style="{padding:'1rem'}"
   @click="$emit('click')">
     
   <div class="ribon">
@@ -45,7 +46,7 @@
 .ribon span {
   position: absolute;
   display: inline-block;
-  top: 7px;
+  top: 9px;
   left: -27px;
   width: 100px;
   padding: 2px 10px;
