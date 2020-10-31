@@ -4,26 +4,34 @@
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
-      <v-snackbar v-model="isShowSnackbar" :centered="false" color="#003C88" :timeout="2000"> <div class="has-text-centered is-size-5">Logout successfully</div> </v-snackbar>
+      <v-snackbar top v-model="isShowSnackbar" :centered="false" color="#003C88" :timeout="2000"> <div class="has-text-centered is-size-5">{{strSnackbar}}</div> </v-snackbar>
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item">
             <img src="@/assets/affondra.logo.png" alt="Logo">
           </a>
-          <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+          <span class="navbar-burger burger" data-target="navbarMenuHeroA" @click="isNavOpen = !isNavOpen">
             <span></span>
             <span></span>
             <span></span>
           </span>
         </div>
-        <div id="navbarMenuHeroA" class="navbar-menu">
+        <div id="navbarMenuHeroA" class="navbar-menu" :class="{'is-active':isNavOpen}">
           <div class="navbar-end">
-            <div v-if="isLoggedIn" class="navbar-item">
-              <span class="tag is-primary is-light">
-                Your address: {{address}}
-              </span>
+            <div v-if="isLoggedIn" class="navbar-item af-address">
+              <div class="is-flex is-flex-direction-row">
+                <span class="tag is-primary is-light" @click="copyToClipboard();" :style="{'user-select':'none'}">
+                  {{address}}
+                  <span class="icon is-small ml-1 has-text-primary">
+                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                    </svg>
+                  </span>
+                </span>
+                <input id="clipBoard" type="text" :value="address" :style="{height:'0'}" />
+              </div>
             </div>
-            <div v-if="isLoggedIn" class="navbar-item">
+            <div v-if="isLoggedIn" class="navbar-item has-text-right">
               <ShowWalletBalance />
             </div>
             <!-- 
@@ -38,7 +46,7 @@
               </button>
             </div>
             -->
-            <div v-if="!isLoggedIn" class="navbar-item">
+            <div v-if="!isLoggedIn" class="navbar-item has-text-right">
               <button class="button is-rounded" @click="isShowLoginModal = true">
                 <span class="icon">
                   <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -48,8 +56,8 @@
                 <span>Login</span>
               </button>
             </div>
-            <div v-if="isLoggedIn" class="navbar-item">
-              <button class="button is-rounded" @click="$store.dispatch('logout');isShowSnackbar=true;">
+            <div v-if="isLoggedIn" class="navbar-item has-text-right">
+              <button class="button is-rounded" @click="$store.dispatch('logout');showSnackbar('Logout successfully.');">
                 <span class="icon">
                   <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
@@ -65,7 +73,7 @@
   </div>
 
   <!-- Hero content: will be in the middle -->
-  <div class="hero-body">
+  <div class="hero-body" :style="{'padding-top':'1rem'}">
     <div class="container has-background-white has-text-black">
       <router-view />
     </div>
@@ -83,13 +91,9 @@
             </p>
           </div>
         </div>
-        <div class="column is-narrow">
+        <div class="column is-narrow has-text-centered">
           <a class="github-button" href="https://github.com/EG-easy" data-size="large" data-show-count="true" aria-label="Follow @EG-easy on GitHub">Follow @EG-easy</a>
-        </div>
-        <div class="column is-narrow">
           <a class="github-button" href="https://github.com/EG-easy/affondra/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch EG-easy/affondra on GitHub">Watch</a>
-        </div>
-        <div class="column is-narrow">
           <a class="github-button" href="https://github.com/EG-easy/affondra" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star EG-easy/affondra on GitHub">Star</a>
         </div>
       </div>
@@ -133,6 +137,11 @@ $fullhd-enabled: false;
 </style>
 
 <style lang="scss" scoped>
+.af-address{
+  max-width: 90vw;
+  overflow-x: hidden;
+}
+
 .sp-container {
   margin: 0 auto;
   max-width: 800px;
@@ -159,7 +168,9 @@ export default {
   data() {
     return {
       isShowLoginModal: false,
+      strSnackbar: '',
       isShowSnackbar: false,
+      isNavOpen: false,
     }
   },
   computed: {
@@ -173,6 +184,19 @@ export default {
     },
   },
   methods: {
+    showSnackbar (message) {
+      this.strSnackbar = message;
+      this.isShowSnackbar = true;
+    },
+    copyToClipboard () {
+      const clipBoard = document.getElementById('clipBoard');
+      console.log(clipBoard);
+      clipBoard.value = this.address;
+      clipBoard.select();
+      document.execCommand("copy");
+      clipBoard.blur();
+      this.showSnackbar('Your address was copied.')
+    },
     async submit() {
       const payload = {
         type: "mint",
