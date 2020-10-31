@@ -1,6 +1,7 @@
 <template>
 <section class="hero is-primary" :style="{'min-height':'100vh'}">
   <LoginModal v-if="isShowLoginModal" @close="isShowLoginModal = false" />
+  <ReLoginModal v-if="isShowReLoginModal" @close="isShowReLoginModal = false" />
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
@@ -18,8 +19,8 @@
         </div>
         <div id="navbarMenuHeroA" class="navbar-menu" :class="{'is-active':isNavOpen}">
           <div class="navbar-end">
-            <div v-if="isLoggedIn" class="navbar-item af-address">
-              <div class="is-flex is-flex-direction-row">
+            <div v-if="isLoggedIn" class="navbar-item">
+              <div class="is-flex is-flex-direction-row-reverse">
                 <span class="tag is-primary is-light" @click="copyToClipboard();" :style="{'user-select':'none'}">
                   {{address}}
                   <span class="icon is-small ml-1 has-text-primary">
@@ -28,7 +29,7 @@
                     </svg>
                   </span>
                 </span>
-                <input id="clipBoard" type="text" :value="address" :style="{height:'0'}" />
+                <input id="clipBoard" type="text" :value="address" :style="{height:'0',width:'0'}" />
               </div>
             </div>
             <div v-if="isLoggedIn" class="navbar-item has-text-right">
@@ -154,16 +155,17 @@ section.hero.is-primary{
 </style>
 
 <script>
+import store from "store";
+
 import LoginModal from '@/components/LoginModal.vue'
 import ShowWalletBalance from '@/components/ShowWalletBalance.vue'
+import ReLoginModal from '@/components/ReLoginModal.vue'
 
 export default {
   components: {
     LoginModal,
     ShowWalletBalance,
-  },
-  created() {
-    this.$store.dispatch("init");
+    ReLoginModal,
   },
   data() {
     return {
@@ -171,6 +173,7 @@ export default {
       strSnackbar: '',
       isShowSnackbar: false,
       isNavOpen: false,
+      isShowReLoginModal: false,
     }
   },
   computed: {
@@ -182,6 +185,15 @@ export default {
       const address = client && client.senderAddress;
       return address;
     },
+  },
+  created() {
+    this.$store.dispatch("init");
+  },
+  mounted() {
+    const userdata = store.get('user')
+    if (typeof userdata !== 'undefined' && typeof userdata.serializedWallet !== 'undefined') {
+      this.isShowReLoginModal = true;
+    }
   },
   methods: {
     showSnackbar (message) {

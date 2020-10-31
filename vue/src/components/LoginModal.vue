@@ -59,12 +59,17 @@ import axios from "axios";
 import store from "store";
 import { Secp256k1HdWallet, SigningCosmosClient } from "@cosmjs/launchpad";
 
+import LoaderModal from '@/components/LoaderModal.vue'
+
 const API = "https://api.affondra.com";
 const API_FIREBASE = 'https://asia-northeast1-affondra.cloudfunctions.net';
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8'; 
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 export default {
+  components: {
+    LoaderModal,
+  },
   props: {
     title: String,
     isVisible: Boolean,
@@ -127,7 +132,7 @@ export default {
       
       this.strLeaderMessage = 'Creating new mnemonic...';
       this.isLoading = true;
-      await ( new Promise(resolve => { setTimeout(() => { resolve(0) }, 100)}) );
+      await this.sleep(100);
       const wallet = await Secp256k1HdWallet.generate(24).catch(e => {
         console.error(e);
         this.strLeaderMessage = 'Failed!!';

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import store from "store";
 import app from "./app.js";
 // import cosmos from "@tendermint/vue/src/store/cosmos.js";
 import { Secp256k1HdWallet, SigningCosmosClient, makeCosmoshubPath  } from "@cosmjs/launchpad";
@@ -61,6 +62,17 @@ export default new Vuex.Store({
     async chainIdFetch({ commit }) {
       const node_info = (await axios.get(`${API}/node_info`)).data.node_info;
       commit("chainIdSet", { chain_id: node_info.network });
+    },
+    async accountSignInWithSerializedWallet({ commit }, { password }) { // eslint-disable-line no-unused-vars
+      const wallet = await Secp256k1HdWallet.deserialize(store.get('user').serializedWallet, password)
+      const [{ address }] = await wallet.getAccounts();
+      const url = `${API}/auth/accounts/${address}`;
+      const acc = (await axios.get(url)).data;
+      
+      const account = acc.result.value;
+      const client = new SigningCosmosClient(API, address, wallet);
+      commit("accountUpdate", { account });
+      commit("clientUpdate", { client });
     },
     async accountSignIn({ commit }, { mnemonic }) {
       const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), ADDRESS_PREFIX);
