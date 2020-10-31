@@ -45,7 +45,7 @@
         </div>
       </div>
       <div v-for="(item, index) in filterdItemsByRegExp" :key="index" class="column is-3">
-        <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=isLoggedIn;" />
+        <ItemThumbnail v-bind="item" @click="indexSelectedItem=index;isShowBuyModal=true;" />
       </div>
       <div v-if="filterdItemsByRegExp.length < 1" class="column is-12 has-text-centered" :style="{'flex-basis':'100%'}">
         <button class="button is-primary is-light" @click="clearFilter">
@@ -54,7 +54,7 @@
       </div>
     </div>
   </div>
-  <div id="listing-button" :disabled="!$store.getters.isLoggedIn" class="has-text-centered" @click="isShowListingModal = ($store.getters.isLoggedIn ? true : false)">
+  <div id="listing-button" :disabled="!$store.getters.isLoggedIn" class="has-text-centered" @click="isShowListingModal = isLoggedIn">
     <!--<span id="listing-button-text" class="mr-2" :style="{'font-size':'30px', 'line-height':'90px'}">List new item!</span>-->
     <span :style="{'font-size':'60px', 'line-height':'74px'}">+</span>
   </div>

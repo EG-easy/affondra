@@ -20,6 +20,7 @@
             <div class="has-text-centered">{{price}}</div>
           </div>
         </div>
+        <!--
         <div class="has-text-left my-2">
           <h4 class="subtitle is-4 has-text-black">Enter password to proceed</h4>
         </div>
@@ -33,7 +34,19 @@
             </span>
           </p>
         </div>
-        <div>{{ errorMessage }}</div>
+        -->
+        <v-checkbox v-model="isConfirmPurchase" color="indigo">
+          <template v-slot:label>
+            <span class="is-size-6">
+              Read the
+              <span class="af-tip has-text-danger">
+                TERM
+                <div class="af-tip-description has-text-centered">Its DEMO so you will recieve only NFT🙃</div>
+              </span>
+              and confirm the purchase.</span>  
+          </template>
+        </v-checkbox>
+        <div class="has-text-info">{{ errorMessage }}</div>
         <div class="is-flex is-flex-direction-row my-4">
           <!--<button :disabled="isLoading" class="button is-primary is-light" @click="onClearClicked">
             <span>Clear</span>
@@ -55,8 +68,44 @@
 </transition>
 </template>
 
-<script>
+<style lang="scss" scoped>
+.af-tip{
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+.af-tip p{
+    margin:0;
+    padding:0;
+}
+.af-tip-description {
+    display: none;
+    position: absolute;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.6em;
+    color: #fff;
+    border-radius: 5px;
+    background: #000;
+    width: 250px;
+}
+.af-tip-description:before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20%;
+    border: 15px solid transparent;
+    border-top: 15px solid #000;
+    margin-left: -15px;
+}
+.af-tip:hover .af-tip-description{
+    display: inline-block;
+    top: -70px;
+    left: -30px;
+}
+</style>
 
+<script>
 export default {
   props: {
     title: String,
@@ -73,12 +122,17 @@ export default {
       isLoading: false,
       strLeaderMessage: 'Processing...',
       errorMessage: '',
+      isConfirmPurchase: false,
     }
   },
   computed: {
+    isLoggedIn () {
+      return this.$store.getters.isLoggedIn
+    },
     isInputValid: function () {
       return (
-        typeof this.password === 'string' && this.password.length > 0
+        this.isLoggedIn &&
+        this.isConfirmPurchase
       );
     },
     address() {
@@ -87,11 +141,15 @@ export default {
       return address;
     },
   },
+  mounted () {
+    if (!this.isLoggedIn) this.errorMessage = 'You need to login first for purchase.'
+  },
   methods: {
     getRandomStr: function (len) {
       return Array(len).fill(0).map(() => Math.floor(Math.random() * Math.floor(62))).map(v => '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'.substr(v, 1)).join('')
     },
     async onBuyClicked() {
+      if (!this.isLoggedIn) return null;
       this.isLoading = true;
       this.strLeaderMessage = 'Sending purchase transaction...'
 
