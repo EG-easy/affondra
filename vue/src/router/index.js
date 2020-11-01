@@ -1,18 +1,20 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Index from "../views/Index.vue";
 import Buy from "../views/Buy.vue";
+import About from "../views/About.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
+    name: 'buy',
     path: "/",
-    component: Index,
+    component: Buy,
   },
   {
-    path: "/buy",
-    component: Buy,
+    name: 'about',
+    path: "/about",
+    component: About,
   },
 ];
 

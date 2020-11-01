@@ -86,5 +86,36 @@ $ affondracli tx buy-item random-nft-id B'address A'address --from B -y
 ```
 
 
+- [Starport](https://github.com/tendermint/starport)
+- [Cosmos SDK documentation](https://docs.cosmos.network)
+- [Cosmos Tutorials](https://tutorials.cosmos.network)
+- [Channel on Discord](https://discord.gg/W8trcGV)
+
+## Presentation
+
+1
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/1.jpg)
+2
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/2.jpg)
+3
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/3.jpg)
+4
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/4.jpg)
+5
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/5.jpg)
+6
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/6.jpg)
+7
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/7.jpg)
+8
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/8.jpg)
+9
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/9.jpg)
+10
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/10.jpg)
+11
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/11.jpg)
+12
+!["AFFONDRA Presentatoin"](./vue/src/assets/presentation/12.jpg)
 ## License
 Licensed under the [MIT](LICENSE).

@@ -5,6 +5,7 @@ import store from "./store";
 
 import _ from "lodash";
 import vuetify from './plugins/vuetify';
+import './plugins/firebase';
 Object.defineProperty(Vue.prototype, "$lodash", { value: _ });
 
 Vue.config.devtools = true;
