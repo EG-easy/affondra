@@ -9,7 +9,11 @@
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item">
-            <img src="@/assets/affondra.logo.png" alt="Logo">
+            <router-link to="/" v-slot="{ href }">
+              <a :href="href">
+                <img src="@/assets/affondra.logo.png" alt="Logo">
+              </a>
+            </router-link>
           </a>
           <span class="navbar-burger burger" data-target="navbarMenuHeroA" @click="isNavOpen = !isNavOpen">
             <span></span>
@@ -35,18 +39,20 @@
             <div v-if="isLoggedIn" class="navbar-item has-text-right">
               <ShowWalletBalance />
             </div>
-            <!-- 
-            <div v-if="isLoggedIn" class="navbar-item">
-              <button class="button is-rounded">
-                <span class="icon">
-                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M2 12C2 9.2 3.6 6.8 6 5.7V3.5C2.5 4.8 0 8.1 0 12S2.5 19.2 6 20.5V18.3C3.6 17.2 2 14.8 2 12M15 3C10 3 6 7 6 12S10 21 15 21 24 17 24 12 20 3 15 3M20 13H16V17H14V13H10V11H14V7H16V11H20V13Z" />
-                  </svg>
-                </span>
-                <span>Get Tokens</span>
-              </button>
+            <div class="navbar-item">
+              <router-link to="/about" v-slot="{ href }">
+                <a :href="href">
+                  <button class="button is-rounded">
+                    <span class="icon">
+                      <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" />
+                      </svg>
+                    </span>
+                    <span>Document</span>
+                  </button>
+                </a>
+              </router-link>
             </div>
-            -->
             <div v-if="!isLoggedIn" class="navbar-item has-text-right">
               <button class="button is-rounded" @click="isShowLoginModal = true">
                 <span class="icon">

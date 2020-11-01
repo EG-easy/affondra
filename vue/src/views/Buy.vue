@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false;refreshItems();" />
-  <BuyModal v-bind="items[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal=false;refreshItems()" />
+  <BuyModal v-bind="filterdItemsByRegExp[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal=false;refreshItems()" />
   <div class="is-flex is-flex-direction-column pa-2">
     <div class="columns is-multiline is-1">
       <div class="column is-flex is-flex-direction-row">
