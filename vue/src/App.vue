@@ -94,9 +94,7 @@
 
   <!-- Hero content: will be in the middle -->
   <div class="hero-body" :style="{'padding-top':'1rem'}">
-    <div class="container has-background-white has-text-black">
-      <router-view />
-    </div>
+    <router-view />
   </div>
 
   <!-- Hero footer: will stick at the bottom -->
@@ -153,7 +151,7 @@ $link: $purple;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
 
-@import "../node_modules/bulma/bulma.sass";
+@import "../node_modules/bulma/bulma";
 </style>
 
 <style lang="scss" scoped>

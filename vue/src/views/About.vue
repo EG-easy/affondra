@@ -1,7 +1,10 @@
 <template>
-<div class="container">
+<div class="container has-background-white has-text-black" :style="{'padding':'1rem'}">
   <LoaderModal v-if="isLoading" :message="strLeaderMessage" />
   <div class="columns is-multiline">
+    <div class="column is-12 has-text-centered">
+      <h1 class="title has-text-black">Presentations</h1>
+    </div>
     <div class="column is-12">
       <img src="@/assets/presentation/1.jpg" alt="presentation page 1">
     </div>
@@ -41,9 +44,10 @@
     <div class="column is-12">
       <img src="@/assets/presentation/13.jpg" alt="presentation page 13">
     </div>
-    <div v-if="notGotTokenYet" class="column is-12 has-text-centered">
-      <div class="columns">
-        <div class="column is-6">
+    <div class="column is-12 has-text-centered is-primary is-flex is-flex-direction-column is-align-items-center">
+      <div v-if="notGotTokenYet" class="box has-background-primary is-narrow is-flex is-flex-direction-column">
+        <h1 class="title">Get 1000 affondollar prize!</h1>
+        <div class="is-flex is-flex-direction-row">
           <div class="field">
             <p class="control has-icons-left has-icons-right">
               <input v-model="targetAddress" class="input" type="text" placeholder="Your address">
@@ -64,9 +68,7 @@
               </span>
             </p>
           </div>
-        </div>
-        <div class="column is-6">
-          <button :disabled="!isValidAddress" class="button is-rounded" @click="notGotTokenYet=false;faucet1000Affondollar();">
+          <button :disabled="!isValidAddress" class="button is-rounded ml-4" @click="notGotTokenYet=false;faucet1000Affondollar();">
             <span class="icon">
               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M2 12C2 9.2 3.6 6.8 6 5.7V3.5C2.5 4.8 0 8.1 0 12S2.5 19.2 6 20.5V18.3C3.6 17.2 2 14.8 2 12M15 3C10 3 6 7 6 12S10 21 15 21 24 17 24 12 20 3 15 3M20 13H16V17H14V13H10V11H14V7H16V11H20V13Z" />
@@ -76,9 +78,9 @@
           </button>
         </div>
       </div>
-    </div>
-    <div v-else class="column is-12 has-text-centered">
-      <h1 class="title has-text-black">Enjoy!</h1>
+      <div v-else class="column is-12 has-text-centered">
+        <h1 class="title has-text-black">Enjoy!</h1>
+      </div>
     </div>
     <!--
     <div class="column is-12 has-text-centered">

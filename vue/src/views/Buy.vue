@@ -1,5 +1,7 @@
 <template>
-<div class="container">
+<div>
+  
+<div class="container has-background-white has-text-black" :style="{'padding':'1rem'}">
   <ReLoginModal v-if="isShowReLoginModal" @close="isShowReLoginModal = false" />
   <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false;refreshItems();" />
   <BuyModal v-bind="filterdItemsByRegExp[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal=false;refreshItems()" />
@@ -59,6 +61,7 @@
     <!--<span id="listing-button-text" class="mr-2" :style="{'font-size':'30px', 'line-height':'90px'}">List new item!</span>-->
     <span :style="{'font-size':'60px', 'line-height':'74px'}">+</span>
   </div>
+</div>
 </div>
 </template>
 
