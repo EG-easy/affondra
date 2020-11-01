@@ -30,9 +30,16 @@ func (k Keeper) CreateItem(ctx sdk.Context, item types.Item) (err error) {
 	k.SetCollection(ctx, item.GetDenom(), collection)
 
 	//register owner info
-	owner, _ := k.GetOwner(ctx, item.GetOwner())
-	owner = owner.AddID(item.GetID())
-	k.SetOwner(ctx, item.GetOwner(), owner.IDs)
+	owner, found := k.GetOwner(ctx, item.GetOwner())
+	if found {
+		owner, err = owner.AddItem(item)
+		if err != nil {
+			return err
+		}
+	} else {
+		owner = types.NewOwner(item.GetOwner(), types.NewItems(item))
+	}
+	k.SetOwner(ctx, item.GetOwner(), owner)
 
 	return nil
 }
@@ -49,6 +56,7 @@ func (k Keeper) GetItem(ctx sdk.Context, key string) (types.Item, error) {
 	return item, nil
 }
 
+// BuyItem create transactions
 func (k Keeper) BuyItem(ctx sdk.Context, key string, receiver sdk.AccAddress) (err error) {
 	item, err := k.GetItem(ctx, key)
 	if err != nil {
@@ -107,7 +115,7 @@ func getItem(ctx sdk.Context, path []string, k Keeper) (res []byte, sdkError err
 	return res, nil
 }
 
-// Get creator of the item
+// GetItemOwner returns creator of the item
 func (k Keeper) GetItemOwner(ctx sdk.Context, key string) sdk.AccAddress {
 	item, err := k.GetItem(ctx, key)
 	if err != nil {
@@ -116,8 +124,22 @@ func (k Keeper) GetItemOwner(ctx sdk.Context, key string) sdk.AccAddress {
 	return item.Creator
 }
 
-// Check if the key exists in the store
+// ItemExists check if the key exists in the store
 func (k Keeper) ItemExists(ctx sdk.Context, key string) bool {
 	store := ctx.KVStore(k.storeKey)
 	return store.Has([]byte(types.ItemPrefix + key))
+}
+
+// IterateItems iterates over collections and performs a function
+func (k Keeper) IterateItems(ctx sdk.Context, handler func(item types.Item) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, []byte(types.ItemPrefix))
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var item types.Item
+		k.cdc.MustUnmarshalBinaryLengthPrefixed(iterator.Value(), &item)
+		if handler(item) {
+			break
+		}
+	}
 }

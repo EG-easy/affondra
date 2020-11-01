@@ -35,6 +35,7 @@ import (
 const appName = "affondra"
 
 var (
+	// Default Setting
 	DefaultCLIHome  = os.ExpandEnv("$HOME/.affondracli")
 	DefaultNodeHome = os.ExpandEnv("$HOME/.affondrad")
 	ModuleBasics    = module.NewBasicManager(
@@ -96,6 +97,7 @@ type NewApp struct {
 
 var _ simapp.App = (*NewApp)(nil)
 
+// NewInitApp is a constructor function for NewApp
 func NewInitApp(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool,
 	invCheckPeriod uint, baseAppOptions ...func(*bam.BaseApp),

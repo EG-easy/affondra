@@ -2,9 +2,9 @@ package types
 
 import sdk "github.com/cosmos/cosmos-sdk/types"
 
+// Query parameters
 const QueryListItem = "list-item"
 const QueryGetItem = "get-item"
-
 const QuerySupply = "supply"
 const QueryOwner = "owner"
 const QueryDenom = "denom"

@@ -1,0 +1,13 @@
+[Unit]
+Description=Affondra Full Node
+After=network-online.target
+
+[Service]
+User=ubuntu
+ExecStart=/home/ubuntu/go/bin/affondrad start
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
