@@ -1,7 +1,6 @@
 <template>
 <section class="hero is-primary" :style="{'min-height':'100vh'}">
   <LoginModal v-if="isShowLoginModal" @close="isShowLoginModal = false" />
-  <ReLoginModal v-if="isShowReLoginModal" @close="isShowReLoginModal = false" />
   <!-- Hero head: will stick at the top -->
   <div class="hero-head">
     <nav class="navbar">
@@ -39,7 +38,7 @@
             <div v-if="isLoggedIn" class="navbar-item has-text-right">
               <ShowWalletBalance />
             </div>
-            <div class="navbar-item">
+            <div v-if="$route.path === '/'" class="navbar-item has-text-right">
               <router-link to="/about" v-slot="{ href }">
                 <a :href="href">
                   <button class="button is-rounded">
@@ -53,7 +52,21 @@
                 </a>
               </router-link>
             </div>
-            <div v-if="!isLoggedIn" class="navbar-item has-text-right">
+            <div v-if="$route.path === '/about'" class="navbar-item has-text-right">
+              <router-link to="/" v-slot="{ href }">
+                <a :href="href">
+                  <button class="button is-rounded">
+                    <span class="icon">
+                      <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M5.5,21C4.72,21 4.04,20.55 3.71,19.9V19.9L1.1,10.44L1,10A1,1 0 0,1 2,9H6.58L11.18,2.43C11.36,2.17 11.66,2 12,2C12.34,2 12.65,2.17 12.83,2.44L17.42,9H22A1,1 0 0,1 23,10L22.96,10.29L20.29,19.9C19.96,20.55 19.28,21 18.5,21H5.5M12,4.74L9,9H15L12,4.74M12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17A2,2 0 0,0 14,15A2,2 0 0,0 12,13Z" />
+                      </svg>
+                    </span>
+                    <span>Buy</span>
+                  </button>
+                </a>
+              </router-link>
+            </div>
+            <div v-if="!isLoggedIn && $route.path === '/'" class="navbar-item has-text-right">
               <button class="button is-rounded" @click="isShowLoginModal = true">
                 <span class="icon">
                   <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -161,17 +174,13 @@ section.hero.is-primary{
 </style>
 
 <script>
-import store from "store";
-
 import LoginModal from '@/components/LoginModal.vue'
 import ShowWalletBalance from '@/components/ShowWalletBalance.vue'
-import ReLoginModal from '@/components/ReLoginModal.vue'
 
 export default {
   components: {
     LoginModal,
     ShowWalletBalance,
-    ReLoginModal,
   },
   data() {
     return {
@@ -179,7 +188,6 @@ export default {
       strSnackbar: '',
       isShowSnackbar: false,
       isNavOpen: false,
-      isShowReLoginModal: false,
     }
   },
   computed: {
@@ -194,12 +202,6 @@ export default {
   },
   created() {
     this.$store.dispatch("init");
-  },
-  mounted() {
-    const userdata = store.get('user')
-    if (typeof userdata !== 'undefined' && typeof userdata.serializedWallet !== 'undefined') {
-      this.isShowReLoginModal = true;
-    }
   },
   methods: {
     showSnackbar (message) {

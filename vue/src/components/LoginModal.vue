@@ -94,7 +94,7 @@ export default {
   methods: {
     sleep (millsec) {
       return new Promise(resolve => { setTimeout(() => { resolve(0) }, millsec)})
-    },	
+    },
     getRandomStr: function (len) {
       return Array(len).fill(0).map(() => Math.floor(Math.random() * Math.floor(62))).map(v => '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'.substr(v, 1)).join('')
     },

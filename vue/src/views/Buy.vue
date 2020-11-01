@@ -1,5 +1,6 @@
 <template>
 <div class="container">
+  <ReLoginModal v-if="isShowReLoginModal" @close="isShowReLoginModal = false" />
   <ListingModal v-if="isShowListingModal" @close="isShowListingModal = false;refreshItems();" />
   <BuyModal v-bind="filterdItemsByRegExp[indexSelectedItem]" v-if="isShowBuyModal" @close="isShowBuyModal=false;refreshItems()" />
   <div class="is-flex is-flex-direction-column pa-2">
@@ -106,15 +107,19 @@ div.af-items {
 </style>
 
 <script>
+import store from "store";
+
 import ItemThumbnail from '@/components/ItemThumbnail.vue'
 import ListingModal from '@/components/ListingModal.vue'
 import BuyModal from '@/components/BuyModal.vue'
+import ReLoginModal from '@/components/ReLoginModal.vue'
 
 export default {
   components: {
     ItemThumbnail,
     ListingModal,
     BuyModal,
+    ReLoginModal
   },
   computed: {
     isLoggedIn() {
@@ -135,11 +140,16 @@ export default {
     }
   },
   mounted: function () {
+    const userdata = store.get('user')
+    if (typeof userdata !== 'undefined' && typeof userdata.serializedWallet !== 'undefined') {
+      this.isShowReLoginModal = true;
+    }
     this.refreshItems();
     console.log(this.items[this.indexSelectedItem]);
   },
   data() {
     return {
+      isShowReLoginModal: false,
       selectedSellingStatusFilter: 'both', // enum['sale', 'both', 'sold']
       isShowBuyModal: false,
       indexSelectedItem: 0,
